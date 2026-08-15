@@ -4,3 +4,12 @@ body {
   background: #ffffff;
   color: #171717;
 }
+
+@keyframes loading-bar-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}

@@ -2,10 +2,12 @@ import { ArrowRight, LogIn, Rocket } from "lucide-react";
 import Link from "next/link";
 
 import Typewriter from "@/components/Typewriter";
+import SessionCheck from "@/components/auth/SessionCheck";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12 md:py-16">
+    <SessionCheck>
+      <main className="flex min-h-screen items-center justify-center bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12 md:py-16">
       <section className="grid w-full max-w-6xl overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 shadow-sm grid-rows-[auto_1px_auto] md:grid-cols-[1fr_1px_1fr] md:grid-rows-1">
         <div className="flex flex-col justify-center gap-6 p-12 md:p-16">
           <h1 className="bg-clip-text text-6xl font-extrabold tracking-tight text-transparent [background-image:linear-gradient(90deg,#38bdf8,#6366f1,#a855f7,#ec4899)] md:text-7xl">
@@ -51,6 +53,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </main>
+      </main>
+    </SessionCheck>
   );
 }

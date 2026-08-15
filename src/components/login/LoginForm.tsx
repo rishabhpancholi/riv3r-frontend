@@ -78,7 +78,7 @@ export default function LoginForm() {
     try {
       const user = await login(values);
       showSuccessToast("Logged in successfully");
-      router.push(`/dashboard/${user.id}`);
+      router.push("/");
     } catch (error) {
       showErrorToast(getErrorMessage(error));
 
