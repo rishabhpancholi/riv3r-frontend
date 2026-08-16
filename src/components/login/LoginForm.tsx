@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, Eye, EyeOff, Loader2, Lock, LogIn, Mail } from "lucide-react";
+import { AlertCircle, ArrowUpRight, Eye, EyeOff, Loader2, Lock, LogIn, Mail } from "lucide-react";
+import Link from "next/link";
 
 import { getErrorMessage } from "@/lib/axios";
 import { login } from "@/lib/auth";
 import { loginSchema, type LoginFormValues } from "@/lib/schemas";
 import { showErrorToast, showSuccessToast } from "@/components/toast/toast";
+import Riv3rLoader from "@/components/auth/Riv3rLoader";
 
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_MS = 5 * 60 * 1000;
@@ -25,6 +27,7 @@ function formatRemaining(remainingMs: number): string {
 export default function LoginForm() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [blockedUntil, setBlockedUntil] = useState<number | null>(null);
@@ -78,6 +81,7 @@ export default function LoginForm() {
     try {
       const user = await login(values);
       showSuccessToast("Logged in successfully");
+      setIsRedirecting(true);
       router.push("/");
     } catch (error) {
       showErrorToast(getErrorMessage(error));
@@ -95,6 +99,10 @@ export default function LoginForm() {
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (isRedirecting) {
+    return <Riv3rLoader />;
   }
 
   return (
@@ -196,6 +204,17 @@ export default function LoginForm() {
           {isSubmitting ? "Logging in..." : isBlocked ? "Blocked" : "Log In"}
         </button>
       </form>
+
+      <p className="mt-6 text-center text-sm text-blue-900/60">
+        New to RIV3R?{" "}
+        <Link
+          href="/onboarding"
+          className="inline-flex items-center gap-1 font-medium text-blue-600 transition hover:text-blue-700 hover:underline"
+        >
+          Let&apos;s onboard
+          <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      </p>
     </div>
   );
 }

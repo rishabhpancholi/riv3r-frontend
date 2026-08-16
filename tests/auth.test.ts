@@ -18,7 +18,7 @@ const mockUser: User = {
   id: "user-1",
   email: "user@example.com",
   name: "Test User",
-  is_verified: true,
+  verification_status: "approved",
   is_resource: false,
   created_at: "2026-01-01T00:00:00Z",
   updated_at: "2026-01-01T00:00:00Z",

@@ -1,7 +1,7 @@
 import { ArrowRight, LogIn, Rocket } from "lucide-react";
 import Link from "next/link";
 
-import Typewriter from "@/components/Typewriter";
+import Typewriter from "@/components/typewriter/Typewriter";
 import SessionCheck from "@/components/auth/SessionCheck";
 
 export default function Home() {

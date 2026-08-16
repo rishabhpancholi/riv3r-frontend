@@ -5,7 +5,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  is_verified: boolean;
+  verification_status: "in_progress" | "approved" | "rejected";
   phone_number?: string | null;
   is_resource: boolean;
   org_id?: string | null;
