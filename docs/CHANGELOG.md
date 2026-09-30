@@ -6,6 +6,14 @@ commit dates in repository history.
 
 ## Unreleased
 
+### Configuration
+
+- Added a local `.env` template containing the server-side backend origin and
+  browser-side same-origin API base URL used by the current application.
+- Updated the Next.js rewrite to derive its source API path from
+  `NEXT_PUBLIC_API_URL` and forward requests to the normalized combination of
+  `BACKEND_API_URL` and that path.
+
 ### Documentation
 
 - Replaced the empty/root backend-oriented agent placeholder with frontend-
