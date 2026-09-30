@@ -1,0 +1,85 @@
+# Changelog
+
+This changelog was reconstructed from the complete Git history on 2026-09-30.
+It describes meaningful source changes rather than lockfile churn. Dates are
+commit dates in repository history.
+
+## Unreleased
+
+### Documentation
+
+- Replaced the empty/root backend-oriented agent placeholder with frontend-
+  specific working rules.
+- Added maintained project truth, structure, setup, and history documents under
+  `docs/`.
+
+## 2026-09-30 — Onboarding UI refinement (`0a349dd`)
+
+### Added
+
+- Added Radix UI and replaced the organization-type native select with an
+  accessible Radix Select.
+- Added the production `npm start` command.
+
+### Changed
+
+- Reworked both onboarding forms into a compact two-column layout at `lg` and
+  retained a single-column layout below it.
+- Reduced form control, card, editor, toolbar, and spacing dimensions so the
+  onboarding flows fit more comfortably on screen.
+- Changed password-rule feedback to a responsive grid.
+
+## 2026-08-16 — Onboarding and supporting pages (`b5ee4f5`)
+
+### Added
+
+- Added organization and resource onboarding routes, forms, Zod validation,
+  API wrappers, and tests.
+- Added reusable onboarding controls for errors, passwords, and skills.
+- Added a TipTap rich-text editor for resource biographies.
+- Added role selection at `/onboarding` and a branded custom 404 page.
+- Added a route-transition loader component.
+- Expanded the dashboard with pending and rejected verification states and an
+  admin contact link.
+
+### Changed
+
+- Moved the typewriter component into its own domain directory.
+- Added redirect loading states and navigation between login/onboarding flows.
+- Extended the user contract with `is_resource` and optional organization/owner
+  fields.
+
+## 2026-08-15 — Tests, CI, and session refactor (`f56cfda`)
+
+### Added
+
+- Added Vitest configuration and auth API-wrapper tests.
+- Added GitHub Actions CI using Node 22, `npm ci`, and `npm test`.
+- Added the branded full-screen loader, `SessionCheck`, `LoginScreen`, and the
+  initial `DashboardView`.
+
+### Changed
+
+- Replaced the dedicated dynamic dashboard route and `SessionHeartbeat` with
+  session detection on `/`: authenticated users see dashboard content there,
+  while guests see the landing page.
+- Added session refresh/retry, periodic checks, focus/visibility checks, and
+  redirect handling for expired authenticated sessions.
+- Added initial-load and route-transition animation styles.
+
+### Removed
+
+- Removed `/dashboard/[user_id]`, its dashboard layout, and the original
+  `SessionHeartbeat` component.
+
+## 2026-08-12 — Initial frontend (`1adf879`)
+
+### Added
+
+- Bootstrapped the Next.js App Router application with React, TypeScript,
+  Tailwind CSS, the React Compiler, and the `@/*` source alias.
+- Added the RIV3R landing page and animated taglines.
+- Added login UI, Zod validation, Axios auth functions, toast notifications,
+  local failed-attempt lockout, and authenticated session heartbeat behavior.
+- Added the initial dynamic dashboard route and placeholder onboarding page.
+- Added the `/api/:path*` backend rewrite with a localhost backend default.
