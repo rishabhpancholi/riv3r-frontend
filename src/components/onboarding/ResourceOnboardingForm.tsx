@@ -115,7 +115,7 @@ export default function ResourceOnboardingForm() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12">
+    <main className="flex min-h-screen flex-col bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-6">
       <div className="mx-auto w-[80%]">
         <Link
           href="/onboarding"
@@ -131,10 +131,10 @@ export default function ResourceOnboardingForm() {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-8 flex flex-col gap-8"
+          className="mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-2"
           noValidate
         >
-          <section className="flex flex-col gap-5 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-6 shadow-sm md:p-8">
+          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
             <h2 className="text-lg font-semibold text-blue-950">
               Resource Details
             </h2>
@@ -202,7 +202,7 @@ export default function ResourceOnboardingForm() {
               <label className="text-sm font-semibold text-blue-950">
                 Experience (Years) <span className="text-red-500">*</span>
               </label>
-              <div className="flex h-12 w-full items-center justify-between rounded-lg border border-blue-200 bg-white transition focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-200">
+              <div className="flex h-10 w-full items-center justify-between rounded-lg border border-blue-200 bg-white transition focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-200">
                 <button
                   type="button"
                   onClick={() =>
@@ -273,7 +273,7 @@ export default function ResourceOnboardingForm() {
             </div>
           </section>
 
-          <section className="flex flex-col gap-5 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-6 shadow-sm md:p-8">
+          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
             <h2 className="text-lg font-semibold text-blue-950">
               Account Details
             </h2>
@@ -350,7 +350,7 @@ export default function ResourceOnboardingForm() {
                 <div className="relative w-36 shrink-0">
                   <select
                     id="country_code"
-                    className="h-12 w-full appearance-none rounded-lg border border-blue-200 bg-white pl-3 pr-8 text-sm text-blue-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
+                    className="h-10 w-full appearance-none rounded-lg border border-blue-200 bg-white pl-3 pr-8 text-sm text-blue-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
                     {...register("country_code")}
                   >
                     <option value="+91">+91 (India)</option>
@@ -378,7 +378,7 @@ export default function ResourceOnboardingForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-2 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 lg:col-span-2 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
           >
             {isSubmitting ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -388,7 +388,7 @@ export default function ResourceOnboardingForm() {
             {isSubmitting ? "Onboarding..." : "Finalize and Onboard"}
           </button>
 
-          <p className="text-center text-sm text-blue-900/60">
+          <p className="text-center text-sm text-blue-900/60 lg:col-span-2">
             Onboarding as an Organization?{" "}
             <Link
               href="/onboarding/organization"

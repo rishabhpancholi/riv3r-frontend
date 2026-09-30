@@ -40,7 +40,7 @@ export default function PasswordField({
           type={showPassword ? "text" : "password"}
           autoComplete="new-password"
           placeholder="Create a strong password"
-          className={`h-12 w-full rounded-lg border bg-white py-3 pl-10 pr-12 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2 ${
+          className={`h-10 w-full rounded-lg border bg-white pl-10 pr-12 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2 ${
             error
               ? "border-red-300 focus:border-red-400 focus:ring-red-200"
               : "border-blue-200 focus:border-sky-400 focus:ring-sky-200"
@@ -62,11 +62,11 @@ export default function PasswordField({
       </div>
 
       {value && (
-        <div className="flex flex-col gap-2 rounded-lg border border-blue-200 bg-white/70 p-4">
+        <div className="flex flex-col gap-1.5 rounded-lg border border-blue-200 bg-white/70 p-3">
           <p className="text-xs font-semibold text-blue-950">
             Password must include:
           </p>
-          <ul className="flex flex-col gap-1.5">
+          <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
             {PASSWORD_RULES.map((rule) => {
               const satisfied = rule.test(value);
               return (

@@ -1,7 +1,7 @@
 import { AlertCircle } from "lucide-react";
 
 const INPUT_BASE =
-  "h-12 w-full rounded-lg border bg-white text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2";
+  "h-10 w-full rounded-lg border bg-white text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2";
 
 export function fieldClasses(hasError: boolean) {
   return `${INPUT_BASE} ${

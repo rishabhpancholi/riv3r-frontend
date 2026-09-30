@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Select } from "radix-ui";
 import {
   ArrowLeft,
   Building2,
+  Check,
   ChevronDown,
   Factory,
   Globe,
@@ -36,6 +38,7 @@ export default function OrganizationOnboardingForm() {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const {
+    control,
     register,
     handleSubmit,
     watch,
@@ -95,7 +98,7 @@ export default function OrganizationOnboardingForm() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12">
+    <main className="flex min-h-screen flex-col bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-6">
       <div className="mx-auto w-[80%]">
         <Link
           href="/onboarding"
@@ -111,10 +114,10 @@ export default function OrganizationOnboardingForm() {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-8 flex flex-col gap-8"
+          className="mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-2"
           noValidate
         >
-          <section className="flex flex-col gap-5 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-6 shadow-sm md:p-8">
+          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
             <h2 className="text-lg font-semibold text-blue-950">
               Organization Details
             </h2>
@@ -194,22 +197,58 @@ export default function OrganizationOnboardingForm() {
               <label htmlFor="org_type" className="text-sm font-semibold text-blue-950">
                 Organization Type <span className="text-red-500">*</span>
               </label>
-              <div className="relative">
-                <Building2 className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-blue-400" />
-                <select
-                  id="org_type"
-                  className={`${fieldClasses(false)} appearance-none pl-10 pr-10`}
-                  {...register("org_type")}
-                >
-                  <option value="client">Client</option>
-                  <option value="agency">Agency</option>
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-blue-400" />
-              </div>
+              <Controller
+                name="org_type"
+                control={control}
+                render={({ field }) => (
+                  <Select.Root value={field.value} onValueChange={field.onChange}>
+                    <Select.Trigger
+                      id="org_type"
+                      ref={field.ref}
+                      onBlur={field.onBlur}
+                      aria-invalid={!!errors.org_type}
+                      className={`${fieldClasses(!!errors.org_type)} group flex items-center pl-3 pr-3 text-left data-[placeholder]:text-blue-300`}
+                    >
+                      <Building2 className="mr-2 h-5 w-5 shrink-0 text-blue-400" />
+                      <Select.Value placeholder="Select organization type" />
+                      <Select.Icon className="ml-auto text-blue-400">
+                        <ChevronDown className="h-5 w-5 transition-transform group-data-[state=open]:rotate-180" />
+                      </Select.Icon>
+                    </Select.Trigger>
+
+                    <Select.Portal>
+                      <Select.Content
+                        position="popper"
+                        sideOffset={6}
+                        className="z-50 w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg border border-blue-200 bg-white p-1 shadow-lg shadow-blue-950/10 data-[state=closed]:animate-out data-[state=open]:animate-in"
+                      >
+                        <Select.Viewport>
+                          {[
+                            { value: "client", label: "Client" },
+                            { value: "agency", label: "Agency" },
+                          ].map((option) => (
+                            <Select.Item
+                              key={option.value}
+                              value={option.value}
+                              className="relative flex h-10 cursor-pointer select-none items-center rounded-md py-2 pl-3 pr-9 text-sm text-blue-950 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-blue-50 data-[highlighted]:text-blue-950"
+                            >
+                              <Select.ItemText>{option.label}</Select.ItemText>
+                              <Select.ItemIndicator className="absolute right-3 inline-flex items-center text-sky-600">
+                                <Check className="h-4 w-4" />
+                              </Select.ItemIndicator>
+                            </Select.Item>
+                          ))}
+                        </Select.Viewport>
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
+                )}
+              />
+              <FieldError message={errors.org_type?.message} />
             </div>
           </section>
 
-          <section className="flex flex-col gap-5 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-6 shadow-sm md:p-8">
+          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
             <h2 className="text-lg font-semibold text-blue-950">Owner Details</h2>
 
             <div className="flex flex-col gap-1.5">
@@ -284,7 +323,7 @@ export default function OrganizationOnboardingForm() {
                 <div className="relative w-36 shrink-0">
                   <select
                     id="country_code"
-                    className="h-12 w-full appearance-none rounded-lg border border-blue-200 bg-white pl-3 pr-8 text-sm text-blue-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
+                    className="h-10 w-full appearance-none rounded-lg border border-blue-200 bg-white pl-3 pr-8 text-sm text-blue-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
                     {...register("owner.country_code")}
                   >
                     <option value="+91">+91 (India)</option>
@@ -312,7 +351,7 @@ export default function OrganizationOnboardingForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-2 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 lg:col-span-2 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
           >
             {isSubmitting ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -322,7 +361,7 @@ export default function OrganizationOnboardingForm() {
             {isSubmitting ? "Onboarding..." : "Finalize and Onboard"}
           </button>
 
-          <p className="text-center text-sm text-blue-900/60">
+          <p className="text-center text-sm text-blue-900/60 lg:col-span-2">
             Onboarding as a Resource?{" "}
             <Link
               href="/onboarding/resource"

@@ -43,7 +43,7 @@ function ToolbarButton({
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-8 w-8 items-center justify-center rounded-md transition disabled:cursor-not-allowed disabled:opacity-40 ${
+      className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition disabled:cursor-not-allowed disabled:opacity-40 ${
         active
           ? "bg-sky-100 text-blue-950"
           : "text-blue-900/60 hover:bg-blue-100/70 hover:text-blue-950"
@@ -69,7 +69,7 @@ export default function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          "tiptap min-h-40 px-4 py-3 text-sm text-blue-950 outline-none",
+          "tiptap min-h-24 px-3 py-2 text-sm text-blue-950 outline-none",
       },
     },
     onUpdate: ({ editor: instance }) => {
@@ -99,7 +99,7 @@ export default function RichTextEditor({
 
   return (
     <div className="overflow-hidden rounded-lg border border-blue-200 bg-white transition focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-200">
-      <div className="flex items-center gap-1 border-b border-blue-100 bg-white/70 px-2 py-1.5">
+      <div className="flex items-center gap-1 border-b border-blue-100 bg-white/70 px-2 py-1">
         <ToolbarButton
           label="Bold"
           active={state.bold}

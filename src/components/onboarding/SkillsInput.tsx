@@ -68,7 +68,7 @@ export default function SkillsInput({
           }}
           onBlur={addSkill}
           placeholder={placeholder}
-          className="h-12 w-full rounded-lg border border-blue-200 bg-white pl-10 pr-4 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
+          className="h-10 w-full rounded-lg border border-blue-200 bg-white pl-10 pr-4 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
         />
       </div>
     </div>
