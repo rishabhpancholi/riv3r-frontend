@@ -37,16 +37,17 @@ product and authorization decision.
 
 The shared Axios client lives in `src/lib/axios.ts`:
 
-- browser base URL: `NEXT_PUBLIC_API_URL`, falling back to `/api`;
+- browser API path: `NEXT_PUBLIC_API_URL`, falling back to `/api`;
 - cookies: `withCredentials: true`;
 - request timeout: 15 seconds;
 - content type: JSON.
 
-When `/api` is used, `next.config.ts` rewrites it to
-`BACKEND_API_URL/api`, where `BACKEND_API_URL` defaults to
-`http://localhost:8000`. Keep `BACKEND_API_URL` server-only. Setting
-`NEXT_PUBLIC_API_URL` bypasses the same-origin rewrite and therefore requires
-the backend's CORS and credential configuration to be correct.
+`next.config.ts` uses the same `NEXT_PUBLIC_API_URL` path as the rewrite source
+and appends it to `BACKEND_API_URL`. With the defaults, a browser request to
+`/api/auth/me` is forwarded to `http://localhost:8000/api/auth/me`. Leading and
+trailing slashes are normalized by the rewrite configuration. Keep
+`BACKEND_API_URL` server-only and keep `NEXT_PUBLIC_API_URL` as a relative path
+such as `/api` so requests remain same-origin and credentialed cookies work.
 
 Implemented endpoints:
 

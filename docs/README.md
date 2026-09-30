@@ -32,22 +32,25 @@ npm start
 
 ## Environment variables
 
-Create `.env.local` only when overriding defaults. Do not commit secrets.
+The repository includes a local `.env` with the development defaults below.
+Change the values for your environment, and do not commit secrets.
 
 | Variable | Scope | Default | Meaning |
 | --- | --- | --- | --- |
-| `BACKEND_API_URL` | Next.js server/config | `http://localhost:8000` | Target used by the `/api/:path*` rewrite. Supply the backend origin without the trailing `/api`. |
-| `NEXT_PUBLIC_API_URL` | Browser | `/api` | Axios base URL. Leave at `/api` to use the same-origin rewrite and cookie-friendly local setup. |
+| `BACKEND_API_URL` | Next.js server/config | `http://localhost:8000` | Backend origin used by the API rewrite. Do not include the API path. |
+| `NEXT_PUBLIC_API_URL` | Browser and Next.js config | `/api` | Relative API path used by Axios and appended to the backend origin by the rewrite. |
 
-Recommended local configuration:
+Local configuration:
 
 ```dotenv
 BACKEND_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=/api
 ```
 
-The browser sends credentialed requests. If `NEXT_PUBLIC_API_URL` points to a
-different origin, the backend must allow that frontend origin and credentialed
-CORS requests.
+The browser sends credentialed requests to the relative API path. For example,
+`/api/auth/login` is rewritten to
+`http://localhost:8000/api/auth/login`. Keep `NEXT_PUBLIC_API_URL` relative;
+put the protocol and host only in `BACKEND_API_URL`.
 
 ## Commands
 
