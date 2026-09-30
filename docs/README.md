@@ -37,18 +37,17 @@ Change the value for your environment, and do not commit secrets.
 
 | Variable | Scope | Default | Meaning |
 | --- | --- | --- | --- |
-| `NEXT_PUBLIC_API_URL` | Browser | `http://localhost:8000/api` | Complete backend API base URL used by Axios. |
+| `BACKEND_API_URL` | Next.js server/config | `http://localhost:8000/api` | Complete backend API base URL used by the `/api` rewrite. |
 
 Local configuration:
 
 ```dotenv
-NEXT_PUBLIC_API_URL=http://localhost:8000/api
+BACKEND_API_URL=http://localhost:8000/api
 ```
 
-The browser calls this URL directly with credentials. The backend must allow the
-frontend origin (normally `http://localhost:3000`) and credentialed CORS
-requests. Do not put secrets in this variable because `NEXT_PUBLIC_*` values are
-included in browser code.
+The browser sends credentialed requests to the same-origin `/api` path. Next.js
+forwards them to `BACKEND_API_URL`, so the environment variable remains
+server-only and the browser does not need the backend origin.
 
 ## Commands
 
