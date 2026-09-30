@@ -8,9 +8,10 @@ commit dates in repository history.
 
 ### Configuration
 
-- Added a local `.env` containing the single full browser-side backend API URL.
-- Removed the Next.js API rewrite and `BACKEND_API_URL`; Axios now calls
-  `NEXT_PUBLIC_API_URL` directly.
+- Added a local `.env` containing the single server-only `BACKEND_API_URL`.
+- Configured Axios to use the fixed same-origin `/api` path and Next.js to
+  forward it to the complete backend API URL without exposing an environment
+  variable to browser code.
 
 ### Documentation
 

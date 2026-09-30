@@ -37,17 +37,17 @@ product and authorization decision.
 
 The shared Axios client lives in `src/lib/axios.ts`:
 
-- browser API URL: `NEXT_PUBLIC_API_URL`, falling back to
-  `http://localhost:8000/api`;
+- browser API base path: the fixed same-origin `/api` path;
 - cookies: `withCredentials: true`;
 - request timeout: 15 seconds;
 - content type: JSON.
 
-There is no Next.js API rewrite. The browser calls the configured backend URL
-directly; for example, `/auth/me` resolves to
-`http://localhost:8000/api/auth/me` with the local default. Because this is a
-cross-origin request from the local Next.js server, the backend must explicitly
-allow the frontend origin and credentialed CORS requests.
+`next.config.ts` rewrites `/api/:path*` to the server-only
+`BACKEND_API_URL`, which defaults to `http://localhost:8000/api`. For example,
+a browser request to `/api/auth/me` is forwarded to
+`http://localhost:8000/api/auth/me`. The configured URL is normalized to avoid
+a duplicate slash. The browser never reads the environment variable or calls
+the backend origin directly.
 
 Implemented endpoints:
 
