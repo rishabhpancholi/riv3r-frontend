@@ -8,11 +8,9 @@ commit dates in repository history.
 
 ### Configuration
 
-- Added a local `.env` template containing the server-side backend origin and
-  browser-side same-origin API base URL used by the current application.
-- Updated the Next.js rewrite to derive its source API path from
-  `NEXT_PUBLIC_API_URL` and forward requests to the normalized combination of
-  `BACKEND_API_URL` and that path.
+- Added a local `.env` containing the single full browser-side backend API URL.
+- Removed the Next.js API rewrite and `BACKEND_API_URL`; Axios now calls
+  `NEXT_PUBLIC_API_URL` directly.
 
 ### Documentation
 

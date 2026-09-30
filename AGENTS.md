@@ -75,8 +75,8 @@ documentation in the same change, and report any unresolved contract ambiguity.
   and redirect to `/login` when an authenticated session expires.
 - Treat the login form's local five-attempt lockout as a UX throttle, not a
   security control.
-- Never place secrets in `NEXT_PUBLIC_*` variables. `BACKEND_API_URL` remains a
-  server-side configuration value.
+- Never place secrets in `NEXT_PUBLIC_*` variables. The configured
+  `NEXT_PUBLIC_API_URL` is a public browser-side API base URL.
 - Do not introduce user identifiers in route URLs or trust client-provided
   authorization state without an explicit product and backend-contract change.
 
