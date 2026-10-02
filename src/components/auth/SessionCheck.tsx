@@ -4,20 +4,22 @@ import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
-import { getMe, refreshSession, type User } from "@/lib/auth";
+import { getMe, refreshSession } from "@/lib/auth";
 import { isUnauthorizedError } from "@/lib/axios";
 import Riv3rLoader from "@/components/auth/Riv3rLoader";
 import DashboardView from "@/components/dashboard/DashboardView";
+import { useSession } from "@/components/auth/SessionProvider";
 
 const HEARTBEAT_INTERVAL_MS = 30 * 60 * 1000;
 
 export default function SessionCheck({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const [checking, setChecking] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const { user, setUser } = useSession();
+  const [checking, setChecking] = useState(user === null);
   const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
+    if (user) return;
     let isActive = true;
 
     async function checkSession() {
@@ -44,7 +46,7 @@ export default function SessionCheck({ children }: { children: ReactNode }) {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [setUser, user]);
 
   useEffect(() => {
     if (!user) return;
@@ -85,7 +87,7 @@ export default function SessionCheck({ children }: { children: ReactNode }) {
       window.removeEventListener("focus", refreshUser);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [user, router]);
+  }, [user, router, setUser]);
 
   if (isExpired) {
     return <Riv3rLoader />;

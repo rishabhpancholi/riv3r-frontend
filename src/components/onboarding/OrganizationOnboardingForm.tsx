@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Select } from "radix-ui";
 import {
-  ArrowLeft,
   Building2,
   Check,
   ChevronDown,
@@ -18,7 +17,6 @@ import {
   Rocket,
   User,
 } from "lucide-react";
-import Link from "next/link";
 
 import { getErrorMessage } from "@/lib/axios";
 import { onboardOrganization } from "@/lib/onboarding";
@@ -27,6 +25,7 @@ import type { OrganizationOnboardingFormValues } from "@/lib/schemas";
 import { showErrorToast, showSuccessToast } from "@/components/toast/toast";
 import Riv3rLoader from "@/components/auth/Riv3rLoader";
 import PasswordField from "@/components/onboarding/PasswordField";
+import OnboardingShell from "@/components/onboarding/OnboardingShell";
 import {
   FieldError,
   fieldClasses,
@@ -98,29 +97,14 @@ export default function OrganizationOnboardingForm() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-6">
-      <div className="mx-auto w-[80%]">
-        <Link
-          href="/onboarding"
-          className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-white/70 px-3 py-2 text-sm font-medium text-blue-900/60 shadow-sm transition hover:border-blue-300 hover:bg-white hover:text-blue-950"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Link>
-
-        <h1 className="mt-4 text-3xl font-semibold text-blue-950">
-          Onboard Organization
-        </h1>
-
+    <OnboardingShell title="Create your organization profile" description="Tell us about the organization and the account owner responsible for managing its RIV3R presence.">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-2"
+          className="mt-8 grid grid-cols-1 items-start gap-5 lg:grid-cols-2"
           noValidate
         >
-          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
-            <h2 className="text-lg font-semibold text-blue-950">
-              Organization Details
-            </h2>
+          <section className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-7">
+            <div><p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Organization</p><h2 className="mt-2 text-xl font-semibold text-ink">Company details</h2><p className="mt-1 text-sm leading-6 text-muted">Public and operational information about your team.</p></div>
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="company_email" className="text-sm font-semibold text-blue-950">
@@ -248,8 +232,8 @@ export default function OrganizationOnboardingForm() {
             </div>
           </section>
 
-          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
-            <h2 className="text-lg font-semibold text-blue-950">Owner Details</h2>
+          <section className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-7">
+            <div><p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Account owner</p><h2 className="mt-2 text-xl font-semibold text-ink">Personal details</h2><p className="mt-1 text-sm leading-6 text-muted">The owner email must share the organization email domain.</p></div>
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="owner_email" className="text-sm font-semibold text-blue-950">
@@ -323,6 +307,7 @@ export default function OrganizationOnboardingForm() {
                 <div className="relative w-36 shrink-0">
                   <select
                     id="country_code"
+                    aria-label="Phone country code"
                     className="h-10 w-full appearance-none rounded-lg border border-blue-200 bg-white pl-3 pr-8 text-sm text-blue-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
                     {...register("owner.country_code")}
                   >
@@ -348,10 +333,7 @@ export default function OrganizationOnboardingForm() {
             </div>
           </section>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 lg:col-span-2 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
+          <button type="submit" disabled={isSubmitting} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 text-base font-semibold text-white shadow-sm transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 lg:col-span-2"
           >
             {isSubmitting ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -361,17 +343,7 @@ export default function OrganizationOnboardingForm() {
             {isSubmitting ? "Onboarding..." : "Finalize and Onboard"}
           </button>
 
-          <p className="text-center text-sm text-blue-900/60 lg:col-span-2">
-            Onboarding as a Resource?{" "}
-            <Link
-              href="/onboarding/resource"
-              className="font-semibold text-blue-950 underline-offset-4 hover:underline"
-            >
-              Switch to Resource
-            </Link>
-          </p>
         </form>
-      </div>
-    </main>
+    </OnboardingShell>
   );
 }

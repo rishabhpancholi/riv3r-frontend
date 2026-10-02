@@ -1,42 +1,9 @@
-import { ArrowLeft, Home, SearchX } from "lucide-react";
+import { ArrowRight, Home, SearchX } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "@/components/ui/Logo";
+import { Card } from "@/components/ui/Card";
+import { buttonVariants } from "@/components/ui/Button";
 
 export default function NotFound() {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12">
-      <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-8 text-center shadow-sm md:p-10">
-        <SearchX className="h-14 w-14 text-blue-950" />
-
-        <h1 className="bg-clip-text text-7xl font-extrabold tracking-tight text-transparent [background-image:linear-gradient(90deg,#38bdf8,#6366f1,#a855f7,#ec4899)]">
-          404
-        </h1>
-
-        <h2 className="text-2xl font-semibold text-blue-950">
-          Page not found
-        </h2>
-
-        <p className="text-sm text-blue-900/60">
-          The page you are looking for doesn&apos;t exist or may have been
-          moved. Let&apos;s get you back on track.
-        </p>
-
-        <div className="mt-2 flex w-full flex-col gap-3">
-          <Link
-            href="/"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
-          >
-            <Home className="h-5 w-5" />
-            Back to Home
-          </Link>
-          <Link
-            href="/login"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-blue-200 bg-white/70 px-8 text-base font-semibold text-blue-950 shadow-sm transition hover:border-blue-300 hover:bg-white"
-          >
-            <ArrowLeft className="h-5 w-5" />
-            Go to Login
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
+  return <main className="flex min-h-screen flex-col bg-canvas"><header className="mx-auto flex h-18 w-full max-w-6xl items-center px-4 sm:px-6"><Logo /></header><section className="flex flex-1 items-center justify-center px-4 py-12"><Card className="w-full max-w-2xl overflow-hidden text-center"><div className="border-b border-line bg-primary-soft/60 p-8 sm:p-12"><SearchX className="mx-auto h-10 w-10 text-primary" /><p className="mt-5 font-display text-7xl italic text-primary">404</p></div><div className="p-7 sm:p-10"><h1 className="text-3xl font-semibold tracking-[-.04em]">This page has drifted away.</h1><p className="mx-auto mt-3 max-w-md leading-7 text-muted">The address may have changed, or the page may no longer exist. Let’s get you somewhere useful.</p><div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row"><Link href="/" className={buttonVariants({variant:"primary"})}><Home className="h-4 w-4" /> Back home</Link><Link href="/login" className={buttonVariants({variant:"secondary"})}>Go to login <ArrowRight className="h-4 w-4" /></Link></div></div></Card></section></main>;
 }

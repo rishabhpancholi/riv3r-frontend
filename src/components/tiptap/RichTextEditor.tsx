@@ -45,8 +45,8 @@ function ToolbarButton({
       onClick={onClick}
       className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition disabled:cursor-not-allowed disabled:opacity-40 ${
         active
-          ? "bg-sky-100 text-blue-950"
-          : "text-blue-900/60 hover:bg-blue-100/70 hover:text-blue-950"
+          ? "bg-primary-soft text-primary"
+          : "text-muted hover:bg-surface-muted hover:text-ink"
       }`}
     >
       {children}
@@ -69,7 +69,7 @@ export default function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          "tiptap min-h-24 px-3 py-2 text-sm text-blue-950 outline-none",
+          "tiptap min-h-28 px-3 py-3 text-sm leading-6 text-ink outline-none",
       },
     },
     onUpdate: ({ editor: instance }) => {
@@ -98,8 +98,8 @@ export default function RichTextEditor({
   if (!editor) return null;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-blue-200 bg-white transition focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-200">
-      <div className="flex items-center gap-1 border-b border-blue-100 bg-white/70 px-2 py-1">
+    <div className="overflow-hidden rounded-xl border border-line bg-surface transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
+      <div className="flex flex-wrap items-center gap-1 border-b border-line bg-surface-muted/50 px-2 py-1.5">
         <ToolbarButton
           label="Bold"
           active={state.bold}

@@ -6,6 +6,30 @@ commit dates in repository history.
 
 ## Unreleased
 
+### Design
+
+- Rebuilt the landing, authentication, onboarding, dashboard, loading, toast,
+  and 404 experiences around an editorial SaaS design system with semantic
+  Tailwind tokens and self-hosted Geist and Instrument Serif fonts.
+- Added shared visual primitives, improved mobile form sizing and semantics,
+  bio character feedback, and verification-aware dashboard states.
+- Replaced the animated landing split-screen with a complete product narrative
+  and removed the typewriter dependency.
+- Simplified the RIV3R wordmark, clarified the public Get started action, and
+  added Dashboard/Projects workspace navigation with protected project routes.
+- Removed the landing-header glare and route-level branded loading screen; an
+  in-memory session provider now keeps authenticated navigation immediate.
+
+### Authentication
+
+- Added a user account dropdown that calls the credentialed `/auth/logout`
+  endpoint and redirects successful logouts to `/login`.
+
+### Testing
+
+- Added Playwright and axe coverage for public routes at mobile and desktop
+  viewports, including accessibility, overflow, and login validation checks.
+
 ### Configuration
 
 - Added a local `.env` template containing the server-side backend origin and

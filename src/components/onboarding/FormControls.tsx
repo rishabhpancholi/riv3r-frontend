@@ -1,20 +1,20 @@
 import { AlertCircle } from "lucide-react";
 
 const INPUT_BASE =
-  "h-10 w-full rounded-lg border bg-white text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2";
+  "h-11 w-full rounded-xl border bg-surface text-sm text-ink outline-none transition placeholder:text-muted/60 focus:ring-4";
 
 export function fieldClasses(hasError: boolean) {
   return `${INPUT_BASE} ${
     hasError
-      ? "border-red-300 focus:border-red-400 focus:ring-red-200"
-      : "border-blue-200 focus:border-sky-400 focus:ring-sky-200"
+      ? "border-danger focus:border-danger focus:ring-danger/10"
+      : "border-line focus:border-primary focus:ring-primary/10"
   }`;
 }
 
 export function FieldError({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-red-500">
+    <p role="alert" className="mt-1 flex items-center gap-1.5 text-sm font-medium text-danger">
       <AlertCircle className="h-4 w-4 shrink-0" />
       {message}
     </p>

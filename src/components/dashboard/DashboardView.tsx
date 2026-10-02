@@ -1,70 +1,20 @@
 import type { ReactNode } from "react";
-import { ArrowUpRight, Clock, ShieldX } from "lucide-react";
-
+import { ArrowUpRight, BriefcaseBusiness, Clock3, ShieldCheck, ShieldX, Sparkles, UserRound } from "lucide-react";
 import type { User } from "@/lib/auth";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import AppShell from "@/components/dashboard/AppShell";
 
-const GMAIL_COMPOSE_URL =
-  "https://mail.google.com/mail/?view=cm&fs=1&to=admin%40riv3r.com";
+const GMAIL_COMPOSE_URL = "https://mail.google.com/mail/?view=cm&fs=1&to=admin%40riv3r.com";
 
-function VerificationCard({
-  icon,
-  title,
-}: {
-  icon: ReactNode;
-  title: string;
-}) {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12">
-      <div className="flex w-full max-w-md flex-col items-center gap-4 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-8 text-center shadow-sm md:p-10">
-        {icon}
-        <h2 className="text-2xl font-semibold text-blue-950">{title}</h2>
-        <p className="text-sm text-blue-900/60">
-          For more queries, mail at{" "}
-          <a
-            href={GMAIL_COMPOSE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 font-medium text-blue-600 transition hover:text-blue-700 hover:underline"
-          >
-            admin@riv3r.com
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
-        </p>
-      </div>
-    </main>
-  );
+function VerificationPanel({ tone, icon, title, copy }: { tone: "warning"|"danger"; icon: ReactNode; title: string; copy: string }) {
+  return <Card className="max-w-3xl p-6 sm:p-9"><Badge tone={tone}>{icon}{tone === "warning" ? "Review in progress" : "Action needed"}</Badge><h1 className="mt-6 text-3xl font-semibold tracking-[-.04em] sm:text-4xl">{title}</h1><p className="mt-4 max-w-xl leading-7 text-muted">{copy}</p><div className="mt-8 rounded-xl bg-surface-muted p-5"><p className="text-sm font-semibold">Need help with your application?</p><p className="mt-1 text-sm leading-6 text-muted">Contact our team and include the email used for your profile.</p><a href={GMAIL_COMPOSE_URL} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark">admin@riv3r.com <ArrowUpRight className="h-4 w-4" /></a></div></Card>;
 }
 
 export default function DashboardView({ user }: { user: User }) {
-  if (user.verification_status === "in_progress") {
-    return (
-      <VerificationCard
-        icon={<Clock className="h-16 w-16 text-amber-500" />}
-        title="Your Verification is under progress"
-      />
-    );
-  }
-
-  if (user.verification_status === "rejected") {
-    return (
-      <VerificationCard
-        icon={<ShieldX className="h-16 w-16 text-red-500" />}
-        title="Your Verification was rejected"
-      />
-    );
-  }
-
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12">
-      <div className="w-full max-w-md rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-8 text-center shadow-sm md:p-10">
-        <h1 className="text-2xl font-semibold text-blue-950">
-          Welcome, {user.name}
-        </h1>
-        <p className="mt-2 text-sm text-blue-900/60">{user.email}</p>
-        <p className="mt-4 inline-block rounded-lg bg-white/70 px-4 py-2 text-xs font-medium text-blue-900/50">
-          User ID: {user.id}
-        </p>
-      </div>
-    </main>
-  );
+  let content: ReactNode;
+  if (user.verification_status === "in_progress") content = <VerificationPanel tone="warning" icon={<Clock3 className="h-3.5 w-3.5" />} title="Your profile is being reviewed." copy="We’re checking the information you provided. Your workspace will open up after verification is complete." />;
+  else if (user.verification_status === "rejected") content = <VerificationPanel tone="danger" icon={<ShieldX className="h-3.5 w-3.5" />} title="We couldn’t verify your profile." copy="Some of the submitted information needs attention. Contact the RIV3R team to understand what is required next." />;
+  else content = <><div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><Badge tone="success"><ShieldCheck className="h-3.5 w-3.5" /> Verified profile</Badge><h1 className="mt-4 text-3xl font-semibold tracking-[-.04em] sm:text-4xl">Welcome, {user.name.split(" ")[0]}.</h1><p className="mt-3 text-muted">Your RIV3R workspace is ready for what comes next.</p></div></div><div className="mt-8 grid gap-5 lg:grid-cols-[1.35fr_.65fr]"><Card className="p-6 sm:p-8"><div className="grid h-12 w-12 place-items-center rounded-xl bg-primary-soft text-primary"><Sparkles className="h-6 w-6" /></div><h2 className="mt-7 text-2xl font-semibold tracking-[-.03em]">You’re ready for the next chapter.</h2><p className="mt-3 max-w-xl leading-7 text-muted">Projects and talent discovery are being prepared. Your verified profile means you’ll be ready when those experiences become available.</p><div className="mt-8 grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-dashed border-line p-5"><BriefcaseBusiness className="h-5 w-5 text-muted" /><p className="mt-4 font-semibold">Projects</p><p className="mt-1 text-sm text-muted">Coming soon</p></div><div className="rounded-xl border border-dashed border-line p-5"><UserRound className="h-5 w-5 text-muted" /><p className="mt-4 font-semibold">Talent network</p><p className="mt-1 text-sm text-muted">Coming soon</p></div></div></Card><Card className="p-6"><p className="text-sm font-semibold uppercase tracking-[.12em] text-muted">Account</p><div className="mt-6 space-y-5"><div><p className="text-xs text-muted">Profile type</p><p className="mt-1 text-sm font-semibold">{user.is_resource ? "Independent professional" : "Organization"}</p></div><div><p className="text-xs text-muted">Email</p><p className="mt-1 break-all text-sm font-semibold">{user.email}</p></div><div><p className="text-xs text-muted">Verification</p><p className="mt-1 text-sm font-semibold text-accent">Approved</p></div></div></Card></div></>;
+  return <AppShell user={user} activePath="/">{content}</AppShell>;
 }

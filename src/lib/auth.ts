@@ -28,3 +28,7 @@ export async function getMe(): Promise<User> {
 export async function refreshSession(): Promise<void> {
   await api.post("/auth/refresh");
 }
+
+export async function logout(): Promise<void> {
+  await api.post("/auth/logout");
+}

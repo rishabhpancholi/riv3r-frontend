@@ -30,27 +30,28 @@ export default function PasswordField({
 
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-semibold text-blue-950">
-        Password <span className="text-red-500">*</span>
+      <label htmlFor={id} className="text-sm font-semibold text-ink">
+        Password <span className="text-danger">*</span>
       </label>
       <div className="relative">
-        <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-blue-400" />
+        <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
         <input
           id={id}
           type={showPassword ? "text" : "password"}
           autoComplete="new-password"
           placeholder="Create a strong password"
-          className={`h-10 w-full rounded-lg border bg-white pl-10 pr-12 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2 ${
+          aria-invalid={!!error}
+          className={`h-11 w-full rounded-xl border bg-surface pl-10 pr-12 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:ring-4 ${
             error
-              ? "border-red-300 focus:border-red-400 focus:ring-red-200"
-              : "border-blue-200 focus:border-sky-400 focus:ring-sky-200"
+              ? "border-danger focus:border-danger focus:ring-danger/10"
+              : "border-line focus:border-primary focus:ring-primary/10"
           }`}
           {...register}
         />
         <button
           type="button"
           onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-400 transition hover:text-blue-600"
+          className="absolute right-2 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg text-muted transition hover:bg-surface-muted hover:text-ink"
           aria-label={showPassword ? "Hide password" : "Show password"}
         >
           {showPassword ? (
@@ -62,8 +63,8 @@ export default function PasswordField({
       </div>
 
       {value && (
-        <div className="flex flex-col gap-1.5 rounded-lg border border-blue-200 bg-white/70 p-3">
-          <p className="text-xs font-semibold text-blue-950">
+        <div className="flex flex-col gap-1.5 rounded-xl border border-line bg-surface-muted/60 p-3">
+          <p className="text-xs font-semibold text-ink">
             Password must include:
           </p>
           <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
@@ -72,12 +73,12 @@ export default function PasswordField({
               return (
                 <li key={rule.key} className="flex items-center gap-2 text-sm">
                   {satisfied ? (
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-accent" />
                   ) : (
-                    <XCircle className="h-4 w-4 shrink-0 text-red-500" />
+                    <XCircle className="h-4 w-4 shrink-0 text-muted" />
                   )}
                   <span
-                    className={satisfied ? "text-emerald-700" : "text-red-600"}
+                    className={satisfied ? "text-accent" : "text-muted"}
                   >
                     {rule.label}
                   </span>
@@ -89,7 +90,7 @@ export default function PasswordField({
       )}
 
       {error && (
-        <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-red-500">
+        <p role="alert" className="mt-1 flex items-center gap-1.5 text-sm font-medium text-danger">
           <AlertCircle className="h-4 w-4 shrink-0" />
           {error}
         </p>

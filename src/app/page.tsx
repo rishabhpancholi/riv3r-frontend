@@ -1,59 +1,26 @@
-import { ArrowRight, LogIn, Rocket } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, CheckCircle2, Sparkles, UserRound, UsersRound } from "lucide-react";
 import Link from "next/link";
-
-import Typewriter from "@/components/typewriter/Typewriter";
 import SessionCheck from "@/components/auth/SessionCheck";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import { buttonVariants } from "@/components/ui/Button";
 
-export default function Home() {
-  return (
-    <SessionCheck>
-      <main className="flex min-h-screen items-center justify-center bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-12 md:py-16">
-      <section className="grid w-full max-w-6xl overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 shadow-sm grid-rows-[auto_1px_auto] md:grid-cols-[1fr_1px_1fr] md:grid-rows-1">
-        <div className="flex flex-col justify-center gap-6 p-12 md:p-16">
-          <h1 className="bg-clip-text text-6xl font-extrabold tracking-tight text-transparent [background-image:linear-gradient(90deg,#38bdf8,#6366f1,#a855f7,#ec4899)] md:text-7xl">
-            RIV3R
-          </h1>
-          <p className="h-9 text-xl font-medium text-blue-900/60 md:text-2xl">
-            <Typewriter />
-          </p>
-        </div>
+const steps = [["01", "Create your profile", "Tell us what you need or what you do best."], ["02", "Complete verification", "Build trust with a reviewed RIV3R identity."], ["03", "Move work forward", "Be ready when the right opportunity arrives."]];
 
-        <div className="bg-gradient-to-r from-transparent via-blue-200 to-transparent md:bg-gradient-to-b" />
-
-        <div className="flex flex-col">
-          <div className="flex flex-1 flex-col justify-center gap-4 p-12 md:p-14">
-            <h2 className="text-2xl font-semibold text-blue-950">Get Started</h2>
-            <p className="text-base leading-relaxed text-blue-900/60">
-              Bring your projects and talent together on one platform.
-            </p>
-            <Link
-              href="/onboarding"
-              className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
-            >
-              <Rocket className="h-5 w-5" />
-              Get Started
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </div>
-
-          <div className="h-px bg-gradient-to-r from-transparent via-blue-200 to-transparent" />
-
-          <div className="flex flex-1 flex-col justify-center gap-4 p-12 md:p-14">
-            <h2 className="text-2xl font-semibold text-blue-950">Log In</h2>
-            <p className="text-base leading-relaxed text-blue-900/60">
-              Access your account and continue where you left off.
-            </p>
-            <Link
-              href="/login"
-              className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
-            >
-              <LogIn className="h-5 w-5" />
-              Log In
-            </Link>
-          </div>
-        </div>
-      </section>
-      </main>
-    </SessionCheck>
-  );
+function LandingPage() {
+  return <main className="min-h-screen overflow-hidden bg-canvas">
+    <PageHeader />
+    <section className="relative border-b border-line px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+      <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_.95fr]">
+        <div className="relative animate-rise"><Badge tone="primary"><Sparkles className="h-3.5 w-3.5" /> Talent and teams, thoughtfully connected</Badge><h1 className="mt-7 max-w-3xl text-5xl font-semibold leading-[.98] tracking-[-.055em] text-ink sm:text-6xl lg:text-7xl">Better work starts with the <span className="font-display font-normal italic text-primary">right fit.</span></h1><p className="mt-7 max-w-xl text-lg leading-8 text-muted">RIV3R gives organizations and independent professionals a focused place to build trusted working relationships—without the noise.</p><div className="mt-9 flex flex-col gap-3 sm:flex-row"><Link href="/onboarding" className={buttonVariants({ variant: "primary", className: "min-h-12 px-6 text-base" })}>Create your profile <ArrowRight className="h-4 w-4" /></Link><Link href="/login" className={buttonVariants({ variant: "secondary", className: "min-h-12 px-6 text-base" })}>I already have an account</Link></div></div>
+        <div className="relative mx-auto w-full max-w-xl" aria-hidden="true"><div className="absolute -left-5 top-16 h-28 w-28 rounded-3xl bg-accent-soft" /><Card className="relative overflow-hidden p-5 sm:p-7"><div className="flex items-center justify-between border-b border-line pb-5"><div className="flex items-center gap-3"><div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-white"><BriefcaseBusiness className="h-5 w-5" /></div><div><p className="font-semibold">Your RIV3R workspace</p><p className="text-sm text-muted">A clearer way to begin</p></div></div><Badge tone="success"><span className="h-1.5 w-1.5 rounded-full bg-accent" /> Verified</Badge></div><div className="grid gap-3 py-5 sm:grid-cols-2"><div className="rounded-xl bg-primary-soft p-5"><UsersRound className="h-5 w-5 text-primary" /><p className="mt-8 text-sm text-muted">For organizations</p><p className="mt-1 font-semibold">Find capable people</p></div><div className="rounded-xl bg-accent-soft p-5"><UserRound className="h-5 w-5 text-accent" /><p className="mt-8 text-sm text-muted">For professionals</p><p className="mt-1 font-semibold">Find meaningful work</p></div></div><div className="flex items-center gap-3 rounded-xl border border-line p-4"><CheckCircle2 className="h-5 w-5 text-accent" /><p className="text-sm font-medium">One profile. A trusted starting point.</p></div></Card></div>
+      </div>
+    </section>
+    <section className="px-4 py-16 sm:px-6 sm:py-24 lg:px-8"><div className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[.16em] text-primary">How it works</p><h2 className="mt-4 max-w-2xl text-4xl font-semibold tracking-[-.04em] sm:text-5xl">A considered path from profile to possibility.</h2><div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-line bg-line md:grid-cols-3">{steps.map(([number,title,copy]) => <div key={number} className="bg-surface p-7 sm:p-9"><span className="font-display text-3xl italic text-primary">{number}</span><h3 className="mt-8 text-lg font-semibold">{title}</h3><p className="mt-2 leading-7 text-muted">{copy}</p></div>)}</div></div></section>
+    <section className="px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8"><div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-2"><Card className="p-8 sm:p-10"><BriefcaseBusiness className="h-7 w-7 text-primary" /><p className="mt-8 text-sm font-semibold uppercase tracking-[.14em] text-primary">Organizations</p><h2 className="mt-3 text-3xl font-semibold tracking-[-.035em]">Build your next team with intention.</h2><p className="mt-4 leading-7 text-muted">Create a verified organization presence and prepare to connect with professionals whose skills fit the work.</p><Link href="/onboarding/organization" className="mt-7 inline-flex items-center gap-2 font-semibold text-primary hover:text-primary-dark">Onboard an organization <ArrowRight className="h-4 w-4" /></Link></Card><Card className="p-8 sm:p-10"><UserRound className="h-7 w-7 text-accent" /><p className="mt-8 text-sm font-semibold uppercase tracking-[.14em] text-accent">Professionals</p><h2 className="mt-3 text-3xl font-semibold tracking-[-.035em]">Put your strongest work forward.</h2><p className="mt-4 leading-7 text-muted">Shape a clear professional profile around your expertise, experience, portfolio, and ambitions.</p><Link href="/onboarding/resource" className="mt-7 inline-flex items-center gap-2 font-semibold text-accent hover:text-ink">Create a professional profile <ArrowRight className="h-4 w-4" /></Link></Card></div></section>
+    <section className="px-4 pb-16 sm:px-6 sm:pb-24 lg:px-8"><div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 rounded-3xl bg-ink px-7 py-10 text-white sm:px-12 sm:py-14 lg:flex-row lg:items-center"><div><p className="text-sm font-semibold uppercase tracking-[.16em] text-white/60">Ready when you are</p><h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-[-.04em] sm:text-4xl">Start with a profile built for trust.</h2></div><Link href="/onboarding" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 font-semibold text-ink transition hover:bg-primary-soft">Get started <ArrowRight className="h-4 w-4" /></Link></div></section>
+    <footer className="border-t border-line px-4 py-8 sm:px-6 lg:px-8"><div className="mx-auto flex max-w-7xl flex-col gap-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"><p className="font-semibold text-ink">RIV3R</p><p>Work, in motion.</p></div></footer>
+  </main>;
 }
+export default function Home() { return <SessionCheck><LandingPage /></SessionCheck>; }

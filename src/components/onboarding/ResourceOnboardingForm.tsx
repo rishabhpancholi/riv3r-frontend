@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  ArrowLeft,
   Briefcase,
   ChevronDown,
   Globe,
@@ -19,7 +18,6 @@ import {
   Rocket,
   User,
 } from "lucide-react";
-import Link from "next/link";
 
 import { getErrorMessage } from "@/lib/axios";
 import { onboardResource } from "@/lib/onboarding";
@@ -30,6 +28,7 @@ import Riv3rLoader from "@/components/auth/Riv3rLoader";
 import RichTextEditor from "@/components/tiptap/RichTextEditor";
 import SkillsInput from "@/components/onboarding/SkillsInput";
 import PasswordField from "@/components/onboarding/PasswordField";
+import OnboardingShell from "@/components/onboarding/OnboardingShell";
 import {
   FieldError,
   fieldClasses,
@@ -115,29 +114,14 @@ export default function ResourceOnboardingForm() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-gradient-to-t from-blue-100 via-blue-50/50 to-zinc-50 px-6 py-6">
-      <div className="mx-auto w-[80%]">
-        <Link
-          href="/onboarding"
-          className="inline-flex items-center gap-2 rounded-lg border border-blue-200 bg-white/70 px-3 py-2 text-sm font-medium text-blue-900/60 shadow-sm transition hover:border-blue-300 hover:bg-white hover:text-blue-950"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Link>
-
-        <h1 className="mt-4 text-3xl font-semibold text-blue-950">
-          Onboard Resource
-        </h1>
-
+    <OnboardingShell title="Create your professional profile" description="Bring together your experience, expertise, and account details in one clear profile.">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-2"
+          className="mt-8 grid grid-cols-1 items-start gap-5 lg:grid-cols-2"
           noValidate
         >
-          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
-            <h2 className="text-lg font-semibold text-blue-950">
-              Resource Details
-            </h2>
+          <section className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-7">
+            <div><p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Professional profile</p><h2 className="mt-2 text-xl font-semibold text-ink">Your work and expertise</h2><p className="mt-1 text-sm leading-6 text-muted">Help organizations understand where you do your best work.</p></div>
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="title" className="text-sm font-semibold text-blue-950">
@@ -163,8 +147,9 @@ export default function ResourceOnboardingForm() {
               </label>
               <RichTextEditor
                 value={bioValue}
-                onChange={(html) => setValue("bio", html)}
+                onChange={(html) => setValue("bio", html, { shouldValidate: true })}
               />
+              <p className="text-right text-xs text-muted" aria-live="polite">{extractText(bioValue).length}/500 characters</p>
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -199,10 +184,10 @@ export default function ResourceOnboardingForm() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold text-blue-950">
+              <label id="experience-label" className="text-sm font-semibold text-blue-950">
                 Experience (Years) <span className="text-red-500">*</span>
               </label>
-              <div className="flex h-10 w-full items-center justify-between rounded-lg border border-blue-200 bg-white transition focus-within:border-sky-400 focus-within:ring-2 focus-within:ring-sky-200">
+              <div role="group" aria-labelledby="experience-label" className="flex h-11 w-full items-center justify-between rounded-xl border border-line bg-surface transition focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10">
                 <button
                   type="button"
                   onClick={() =>
@@ -273,10 +258,8 @@ export default function ResourceOnboardingForm() {
             </div>
           </section>
 
-          <section className="flex flex-col gap-3 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-4 shadow-sm sm:p-5">
-            <h2 className="text-lg font-semibold text-blue-950">
-              Account Details
-            </h2>
+          <section className="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-5 shadow-card sm:p-7">
+            <div><p className="text-xs font-bold uppercase tracking-[.14em] text-primary">Account</p><h2 className="mt-2 text-xl font-semibold text-ink">Your sign-in details</h2><p className="mt-1 text-sm leading-6 text-muted">Use an email you can access and create a secure password.</p></div>
 
             <div className="flex flex-col gap-1.5">
               <label htmlFor="email" className="text-sm font-semibold text-blue-950">
@@ -350,6 +333,7 @@ export default function ResourceOnboardingForm() {
                 <div className="relative w-36 shrink-0">
                   <select
                     id="country_code"
+                    aria-label="Phone country code"
                     className="h-10 w-full appearance-none rounded-lg border border-blue-200 bg-white pl-3 pr-8 text-sm text-blue-950 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
                     {...register("country_code")}
                   >
@@ -375,10 +359,7 @@ export default function ResourceOnboardingForm() {
             </div>
           </section>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 lg:col-span-2 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
+          <button type="submit" disabled={isSubmitting} className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 text-base font-semibold text-white shadow-sm transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60 lg:col-span-2"
           >
             {isSubmitting ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -388,17 +369,7 @@ export default function ResourceOnboardingForm() {
             {isSubmitting ? "Onboarding..." : "Finalize and Onboard"}
           </button>
 
-          <p className="text-center text-sm text-blue-900/60 lg:col-span-2">
-            Onboarding as an Organization?{" "}
-            <Link
-              href="/onboarding/organization"
-              className="font-semibold text-blue-950 underline-offset-4 hover:underline"
-            >
-              Switch to Organization
-            </Link>
-          </p>
         </form>
-      </div>
-    </main>
+    </OnboardingShell>
   );
 }

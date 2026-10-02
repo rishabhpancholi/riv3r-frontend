@@ -8,7 +8,7 @@ vi.mock("@/lib/axios", () => ({
 }));
 
 import { api } from "@/lib/axios";
-import { login, getMe, refreshSession } from "@/lib/auth";
+import { login, getMe, logout, refreshSession } from "@/lib/auth";
 import type { User } from "@/lib/auth";
 
 const mockPost = vi.mocked(api.post);
@@ -96,5 +96,21 @@ describe("refreshSession", () => {
     mockPost.mockRejectedValue(error);
 
     await expect(refreshSession()).rejects.toThrow("Token expired");
+  });
+});
+
+describe("logout", () => {
+  it("posts to /auth/logout so the backend can clear both cookies", async () => {
+    mockPost.mockResolvedValue({ data: {} });
+
+    await logout();
+
+    expect(mockPost).toHaveBeenCalledWith("/auth/logout");
+  });
+
+  it("propagates errors from the API", async () => {
+    mockPost.mockRejectedValue(new Error("Logout failed"));
+
+    await expect(logout()).rejects.toThrow("Logout failed");
   });
 });

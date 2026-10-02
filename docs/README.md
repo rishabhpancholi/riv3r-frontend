@@ -60,7 +60,9 @@ put the protocol and host only in `BACKEND_API_URL`.
 | `npm run build` | Create a production build and perform Next.js/TypeScript checks. |
 | `npm start` | Serve the existing production build. |
 | `npm test` | Run all Vitest tests once. |
+| `npm run test:e2e` | Run responsive and accessibility checks in Playwright. |
 
+Install the Playwright Chromium browser once with `npx playwright install chromium`.
 There is currently no lint command or watch-mode test command.
 
 ## Development checklist

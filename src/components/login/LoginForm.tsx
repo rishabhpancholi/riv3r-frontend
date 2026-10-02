@@ -106,37 +106,35 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-sky-100/70 p-8 shadow-sm md:p-10">
-      <h1 className="bg-clip-text text-center text-4xl font-extrabold tracking-tight text-transparent [background-image:linear-gradient(90deg,#38bdf8,#6366f1,#a855f7,#ec4899)]">
-        RIV3R
-      </h1>
-      <p className="mt-2 text-center text-sm font-medium text-blue-900/60">
-        Access your account and continue where you left off.
-      </p>
+    <div className="w-full max-w-md">
+      <p className="text-sm font-semibold uppercase tracking-[.16em] text-primary">Welcome back</p>
+      <h1 className="mt-3 text-4xl font-semibold tracking-[-.045em] text-ink">Log in to RIV3R</h1>
+      <p className="mt-3 text-base leading-7 text-muted">Access your profile and continue where you left off.</p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-8 flex flex-col gap-5" noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-9 flex flex-col gap-5" noValidate>
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="email" className="text-sm font-semibold text-blue-950">
+          <label htmlFor="email" className="text-sm font-semibold text-ink">
             Email
           </label>
           <div className="relative">
-            <Mail className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-blue-400" />
+            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
             <input
               id="email"
               type="email"
               autoComplete="email"
               placeholder="you@company.com"
               disabled={isBlocked}
-              className={`h-12 w-full rounded-lg border bg-white pl-10 pr-4 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60 ${
+              aria-invalid={!!errors.email}
+              className={`h-12 w-full rounded-xl border bg-surface pl-11 pr-4 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:ring-4 disabled:cursor-not-allowed disabled:opacity-60 ${
                 errors.email
-                  ? "border-red-300 focus:border-red-400 focus:ring-red-200"
-                  : "border-blue-200 focus:border-sky-400 focus:ring-sky-200"
+                  ? "border-danger focus:border-danger focus:ring-danger/10"
+                  : "border-line focus:border-primary focus:ring-primary/10"
               }`}
               {...register("email")}
             />
           </div>
           {errors.email && (
-            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-red-500">
+            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-danger">
               <AlertCircle className="h-4 w-4 shrink-0" />
               {errors.email.message}
             </p>
@@ -144,21 +142,22 @@ export default function LoginForm() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="password" className="text-sm font-semibold text-blue-950">
+          <label htmlFor="password" className="text-sm font-semibold text-ink">
             Password
           </label>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-blue-400" />
+            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
             <input
               id="password"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               placeholder="Enter your password"
               disabled={isBlocked}
-              className={`h-12 w-full rounded-lg border bg-white py-3 pl-10 pr-12 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60 ${
+              aria-invalid={!!errors.password}
+              className={`h-12 w-full rounded-xl border bg-surface py-3 pl-11 pr-12 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:ring-4 disabled:cursor-not-allowed disabled:opacity-60 ${
                 errors.password
-                  ? "border-red-300 focus:border-red-400 focus:ring-red-200"
-                  : "border-blue-200 focus:border-sky-400 focus:ring-sky-200"
+                  ? "border-danger focus:border-danger focus:ring-danger/10"
+                  : "border-line focus:border-primary focus:ring-primary/10"
               }`}
               {...register("password")}
             />
@@ -166,7 +165,7 @@ export default function LoginForm() {
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               disabled={isBlocked}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-400 transition hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="absolute right-2 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-lg text-muted transition hover:bg-surface-muted hover:text-ink disabled:cursor-not-allowed disabled:opacity-60"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
@@ -177,7 +176,7 @@ export default function LoginForm() {
             </button>
           </div>
           {errors.password && (
-            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-red-500">
+            <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-danger">
               <AlertCircle className="h-4 w-4 shrink-0" />
               {errors.password.message}
             </p>
@@ -185,7 +184,7 @@ export default function LoginForm() {
         </div>
 
         {isBlocked && (
-          <p className="flex items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-medium text-red-600">
+          <p role="alert" aria-live="polite" className="flex items-center justify-center gap-1.5 rounded-xl border border-danger/20 bg-danger-soft px-4 py-3 text-center text-sm font-medium text-danger">
             <AlertCircle className="h-4 w-4 shrink-0" />
             Too many failed attempts. Try again in {remaining}.
           </p>
@@ -194,7 +193,7 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={isSubmitting || isBlocked}
-          className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-lg px-8 text-base font-semibold text-blue-950 transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70 [background-image:linear-gradient(90deg,#7dd3fc,#818cf8,#c084fc,#f472b6)]"
+          className="mt-2 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-8 text-base font-semibold text-white shadow-sm transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -205,11 +204,11 @@ export default function LoginForm() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-blue-900/60">
+      <p className="mt-7 text-center text-sm text-muted">
         New to RIV3R?{" "}
         <Link
           href="/onboarding"
-          className="inline-flex items-center gap-1 font-medium text-blue-600 transition hover:text-blue-700 hover:underline"
+          className="inline-flex items-center gap-1 font-semibold text-primary transition hover:text-primary-dark hover:underline"
         >
           Let&apos;s onboard
           <ArrowUpRight className="h-4 w-4" />

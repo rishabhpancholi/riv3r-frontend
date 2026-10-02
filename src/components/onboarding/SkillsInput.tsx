@@ -36,13 +36,13 @@ export default function SkillsInput({
           {value.map((skill) => (
             <span
               key={skill}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 bg-white/70 px-3 py-1.5 text-sm font-medium text-blue-950"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-primary/15 bg-primary-soft px-3 py-1.5 text-sm font-medium text-primary-dark"
             >
               {skill}
               <button
                 type="button"
                 onClick={() => removeSkill(skill)}
-                className="text-blue-400 transition hover:text-red-500"
+                className="rounded text-primary/60 transition hover:text-danger"
                 aria-label={`Remove ${skill}`}
               >
                 <X className="h-4 w-4" />
@@ -53,7 +53,7 @@ export default function SkillsInput({
       )}
 
       <div className="relative">
-        <Plus className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-blue-400" />
+        <Plus className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" />
         <input
           type="text"
           value={input}
@@ -68,7 +68,7 @@ export default function SkillsInput({
           }}
           onBlur={addSkill}
           placeholder={placeholder}
-          className="h-10 w-full rounded-lg border border-blue-200 bg-white pl-10 pr-4 text-sm text-blue-950 outline-none transition placeholder:text-blue-300 focus:border-sky-400 focus:ring-2 focus:ring-sky-200"
+          className="h-11 w-full rounded-xl border border-line bg-surface pl-10 pr-4 text-sm text-ink outline-none transition placeholder:text-muted/60 focus:border-primary focus:ring-4 focus:ring-primary/10"
         />
       </div>
     </div>

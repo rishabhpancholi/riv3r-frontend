@@ -10,9 +10,9 @@ interface ToastContentProps {
 
 export function SuccessToast({ message, onClose }: ToastContentProps) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-white/95 p-4 shadow-lg shadow-emerald-500/5 backdrop-blur">
-      <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />
-      <p className="flex-1 text-sm font-medium leading-snug text-emerald-950">
+    <div className="flex items-start gap-3 rounded-xl border border-accent/20 bg-surface/95 p-4 shadow-card backdrop-blur">
+      <CheckCircle2 className="h-5 w-5 shrink-0 text-accent" />
+      <p className="flex-1 text-sm font-medium leading-snug text-ink">
         {message}
       </p>
       <button
@@ -29,9 +29,9 @@ export function SuccessToast({ message, onClose }: ToastContentProps) {
 
 export function ErrorToast({ message, onClose }: ToastContentProps) {
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-white/95 p-4 shadow-lg shadow-red-500/5 backdrop-blur">
-      <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
-      <p className="flex-1 text-sm font-medium leading-snug text-red-950">
+    <div className="flex items-start gap-3 rounded-xl border border-danger/20 bg-surface/95 p-4 shadow-card backdrop-blur">
+      <AlertCircle className="h-5 w-5 shrink-0 text-danger" />
+      <p className="flex-1 text-sm font-medium leading-snug text-ink">
         {message}
       </p>
       <button

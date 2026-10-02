@@ -16,7 +16,8 @@ Last verified on 2026-09-30.
 |-- next.config.ts              # React Compiler and backend API rewrite
 |-- package.json                # Dependencies and npm commands
 |-- tsconfig.json               # Strict TS and @/* alias
-`-- vitest.config.ts            # Node test environment and alias
+|-- vitest.config.ts            # Node test environment and alias
+`-- playwright.config.ts        # Mobile/desktop browser test configuration
 ```
 
 Generated directories such as `.next/` and `node_modules/` are not source and
@@ -32,6 +33,8 @@ src/app/
 |-- onboarding/page.tsx                # Role selection
 |-- onboarding/organization/page.tsx   # Organization form route
 |-- onboarding/resource/page.tsx       # Resource form route
+|-- projects/page.tsx                  # Authenticated project empty state
+|-- projects/create/page.tsx           # Project creation placeholder
 |-- not-found.tsx                      # App Router 404 entry
 |-- errors/NotFound.tsx                # 404 presentation
 `-- globals.css                        # Tailwind import, loader/editor CSS
@@ -43,13 +46,18 @@ Route files stay thin. Interactive behavior belongs in client components under
 ## Components by domain
 
 - `auth/`
+  - `SessionProvider.tsx` keeps the verified user in memory across client-side
+    authenticated navigation.
   - `SessionCheck.tsx` owns initial session restoration and ongoing session
     checks.
-  - `Riv3rLoader.tsx` is the full-screen branded loading state.
+  - `Riv3rLoader.tsx` is used for initial/direct session restoration, not normal
+    route transitions.
   - `RouteTransitionLoader.tsx` provides a timed route overlay but is currently
     unused.
 - `dashboard/DashboardView.tsx` renders approved, pending, and rejected user
-  states. It is not a standalone route.
+  states. `dashboard/AppShell.tsx` owns Dashboard/Projects navigation and the
+  logout account menu.
+- `projects/` supplies the protected project list and create-placeholder views.
 - `login/`
   - `LoginScreen.tsx` supplies the page shell.
   - `LoginForm.tsx` owns validation, login, local lockout, toast, and redirect.
@@ -59,14 +67,15 @@ Route files stay thin. Interactive behavior belongs in client components under
     onboarding controls.
 - `tiptap/RichTextEditor.tsx` is the controlled rich-text bio editor.
 - `toast/` mounts `react-hot-toast` and supplies branded success/error content.
-- `typewriter/Typewriter.jsx` animates landing-page taglines. This is the only
-  JavaScript/JSX source component; the rest is TypeScript/TSX.
+- `ui/` contains the shared logo, header, button, card, and badge primitives.
+- `onboarding/OnboardingShell.tsx` provides the shared branded two-step form
+  frame.
 
 ## Library layer
 
 - `src/lib/axios.ts`: configured Axios instance plus normalized error and 401
   helpers.
-- `src/lib/auth.ts`: `User` contract and login/me/refresh calls.
+- `src/lib/auth.ts`: `User` contract and login/me/refresh/logout calls.
 - `src/lib/onboarding.ts`: organization/resource payload contracts and POST
   wrappers.
 - `src/lib/schemas.ts`: Zod schemas, inferred form types, and shared password
@@ -123,6 +132,6 @@ user input
 
 `tests/auth.test.ts` and `tests/onboarding.test.ts` test request paths, payload
 forwarding, successful return values, and propagated failures. Add focused tests
-beside this pattern for library logic. Component or end-to-end infrastructure
-does not exist yet; introducing it is an architectural change and should be
-documented.
+beside this pattern for library logic. `tests/e2e/design.spec.ts` uses Playwright
+and axe to cover every public route at mobile and desktop sizes, check horizontal
+overflow and accessibility, and verify login validation.
