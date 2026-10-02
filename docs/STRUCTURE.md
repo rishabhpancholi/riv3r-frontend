@@ -76,6 +76,8 @@ Route files stay thin. Interactive behavior belongs in client components under
 - `src/lib/axios.ts`: configured Axios instance plus normalized error and 401
   helpers.
 - `src/lib/auth.ts`: `User` contract and login/me/refresh/logout calls.
+- `src/lib/access-control.ts`: account-role and permission types, route policies,
+  permission helpers, and the declarative workspace navigation registry.
 - `src/lib/onboarding.ts`: organization/resource payload contracts and POST
   wrappers.
 - `src/lib/schemas.ts`: Zod schemas, inferred form types, and shared password
@@ -130,8 +132,11 @@ user input
 
 ## Tests
 
-`tests/auth.test.ts` and `tests/onboarding.test.ts` test request paths, payload
+`tests/auth.test.ts`, `tests/onboarding.test.ts`, and
+`tests/access-control.test.ts` cover request contracts, payload mapping, and the
+role/permission matrix. The API tests cover request paths, payload
 forwarding, successful return values, and propagated failures. Add focused tests
 beside this pattern for library logic. `tests/e2e/design.spec.ts` uses Playwright
 and axe to cover every public route at mobile and desktop sizes, check horizontal
-overflow and accessibility, and verify login validation.
+overflow and accessibility, login validation, permission-filtered navigation,
+403 states, project creation access, and logout.

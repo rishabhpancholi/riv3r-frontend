@@ -13,17 +13,18 @@ import { showErrorToast } from "@/components/toast/toast";
 import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/cn";
 import { useSession } from "@/components/auth/SessionProvider";
+import { visibleNavigation } from "@/lib/access-control";
 
-const links = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/projects", label: "Projects", icon: FolderKanban },
-];
+const NAV_ICONS = { "/": LayoutDashboard, "/projects": FolderKanban } as const;
+const ROLE_LABELS = { client: "Client account", agency: "Agency account", resource: "Professional account" } as const;
 
 export default function AppShell({ user, activePath, children }: { user: User; activePath: "/" | "/projects"; children: ReactNode }) {
   const router = useRouter();
   const { setUser } = useSession();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const initials = user.name.split(" ").map(part => part[0]).join("").slice(0, 2).toUpperCase();
+  const links = visibleNavigation(user);
+  const roleLabel = user.account_role && user.account_role in ROLE_LABELS ? ROLE_LABELS[user.account_role as keyof typeof ROLE_LABELS] : "RIV3R account";
 
   async function handleLogout() {
     if (isLoggingOut) return;
@@ -52,7 +53,7 @@ export default function AppShell({ user, activePath, children }: { user: User; a
           <DropdownMenu.Portal>
             <DropdownMenu.Content align="end" sideOffset={8} className="z-50 min-w-64 rounded-xl border border-line bg-surface p-2 shadow-card">
               <div className="border-b border-line px-3 py-2.5 sm:hidden"><p className="text-sm font-semibold">{user.name}</p><p className="mt-0.5 truncate text-xs text-muted">{user.email}</p></div>
-              <DropdownMenu.Item asChild><div className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted outline-none"><UserRound className="h-4 w-4" />{user.is_resource ? "Professional account" : "Organization account"}</div></DropdownMenu.Item>
+              <DropdownMenu.Item asChild><div className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted outline-none"><UserRound className="h-4 w-4" />{roleLabel}</div></DropdownMenu.Item>
               <DropdownMenu.Separator className="my-1 h-px bg-line" />
               <DropdownMenu.Item onSelect={event => { event.preventDefault(); void handleLogout(); }} disabled={isLoggingOut} className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-danger outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-danger-soft">
                 {isLoggingOut ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}{isLoggingOut ? "Logging out…" : "Log out"}
@@ -61,10 +62,10 @@ export default function AppShell({ user, activePath, children }: { user: User; a
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
-      <nav aria-label="Workspace" className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto border-t border-line px-4 py-2 md:hidden">{links.map(({href,label,icon:Icon}) => <Link key={href} href={href} className={cn("inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold", activePath === href ? "bg-primary-soft text-primary" : "text-muted hover:bg-surface-muted hover:text-ink")}><Icon className="h-4 w-4" />{label}</Link>)}</nav>
+      <nav aria-label="Workspace" className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto border-t border-line px-4 py-2 md:hidden">{links.map(({href,label}) => { const Icon = NAV_ICONS[href]; return <Link key={href} href={href} className={cn("inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-lg px-3 text-sm font-semibold", activePath === href ? "bg-primary-soft text-primary" : "text-muted hover:bg-surface-muted hover:text-ink")}><Icon className="h-4 w-4" />{label}</Link>; })}</nav>
     </header>
     <div className="mx-auto grid max-w-[1440px] md:grid-cols-[220px_1fr]">
-      <aside className="hidden min-h-[calc(100vh-4.5rem)] border-r border-line p-5 md:block"><nav aria-label="Workspace" className="space-y-1">{links.map(({href,label,icon:Icon}) => <Link key={href} href={href} className={cn("flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition", activePath === href ? "bg-primary-soft text-primary" : "text-muted hover:bg-surface-muted hover:text-ink")}><Icon className="h-4 w-4" />{label}</Link>)}</nav></aside>
+      <aside className="hidden min-h-[calc(100vh-4.5rem)] border-r border-line p-5 md:block"><nav aria-label="Workspace" className="space-y-1">{links.map(({href,label}) => { const Icon = NAV_ICONS[href]; return <Link key={href} href={href} className={cn("flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold transition", activePath === href ? "bg-primary-soft text-primary" : "text-muted hover:bg-surface-muted hover:text-ink")}><Icon className="h-4 w-4" />{label}</Link>; })}</nav></aside>
       <div className="min-w-0 p-4 sm:p-7 lg:p-10">{children}</div>
     </div>
   </main>;

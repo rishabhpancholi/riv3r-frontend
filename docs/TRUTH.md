@@ -13,7 +13,8 @@ RIV3R currently provides:
 - organization onboarding and individual resource onboarding;
 - cookie-based login and session restoration;
 - a minimal authenticated dashboard with verification-status states; and
-- authenticated project list and create-placeholder routes;
+- permission-protected project list and create-placeholder routes for approved
+  client accounts;
 - a branded 404 experience.
 
 There is no full project/resource marketplace or authenticated application
@@ -28,8 +29,8 @@ shell in this repository yet.
 | `/onboarding` | Lets the visitor choose organization or resource onboarding. |
 | `/onboarding/organization` | Creates an organization and its owner. |
 | `/onboarding/resource` | Creates an individual resource profile. |
-| `/projects` | Shows an authenticated project empty state with a create-project action. |
-| `/projects/create` | Shows the authenticated project-creation placeholder. |
+| `/projects` | Requires `projects.read`; otherwise shows 403 to authenticated users. |
+| `/projects/create` | Requires `projects.create`; otherwise shows 403 to authenticated users. |
 | Any unknown route | Uses the custom App Router 404 page. |
 
 The old `/dashboard/[user_id]` route was removed. The dashboard is rendered on
@@ -66,6 +67,11 @@ Implemented endpoints:
 Optional form strings are normalized to `null` before onboarding requests.
 Phone numbers are sent as country code plus the 10-digit national number.
 
+`/auth/login` and `/auth/me` supply the server-authoritative `account_role` and
+`permissions`. These fields are optional during backend rollout and missing or
+unknown values grant no protected access. Current permissions are
+`projects.read` and `projects.create`.
+
 ## Authentication behavior
 
 - On `/`, `SessionCheck` calls `/auth/me`.
@@ -79,6 +85,12 @@ Phone numbers are sent as country code plus the 10-digit national number.
   or the approved welcome view.
 - The authenticated account menu logs out through `/auth/logout` and redirects
   to `/login`; tokens remain in credentialed browser cookies.
+- Dashboard is universal. Projects navigation requires `projects.read`; project
+  creation requires `projects.create`. Agencies, resources, unverified clients,
+  and accounts without permissions do not see Projects and receive a dedicated
+  403 response state on direct route access.
+- Frontend permission checks are UX boundaries only. Backend project endpoints
+  remain responsible for enforcing authorization.
 - The root in-memory session provider preserves the verified user across
   authenticated client navigation, avoiding full-screen loaders between the
   dashboard and project routes. Direct protected-route loads still verify the

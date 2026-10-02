@@ -24,6 +24,9 @@ commit dates in repository history.
 
 - Added a user account dropdown that calls the credentialed `/auth/logout`
   endpoint and redirects successful logouts to `/login`.
+- Added server-authoritative account roles and permissions, centralized access
+  policies, permission-filtered navigation, fail-closed project guards, and a
+  dedicated 403 state. Projects are initially limited to approved clients.
 
 ### Testing
 

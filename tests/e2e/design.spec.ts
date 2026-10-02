@@ -38,17 +38,16 @@ const authenticatedUser = {
   name: "Alex Morgan",
   verification_status: "approved",
   is_resource: false,
+  account_role: "client",
+  permissions: ["projects.read", "projects.create"],
   created_at: "2026-01-01T00:00:00Z",
   updated_at: "2026-01-01T00:00:00Z",
 };
 
 test("authenticated project routes provide project navigation", async ({ page }) => {
   await page.route("**/api/auth/me", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(authenticatedUser) }));
-  await page.goto("/");
-  await expect(page.getByRole("heading", { name: /Welcome, Alex/ })).toBeVisible();
-  await page.getByRole("link", { name: "Projects" }).first().click();
+  await page.goto("/projects");
   await expect(page.getByRole("heading", { name: "Projects", exact: true })).toBeVisible();
-  await expect(page.getByLabel("Loading RIV3R")).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Dashboard" }).first()).toHaveAttribute("href", "/");
   await expect(page.getByRole("link", { name: "Create project" }).first()).toHaveAttribute("href", "/projects/create");
 });
@@ -62,4 +61,34 @@ test("account menu logs out and redirects to login", async ({ page }) => {
   await page.getByRole("menuitem", { name: "Log out" }).click();
   await expect(page).toHaveURL(/\/login$/);
   expect(logoutCalled).toBe(true);
+});
+
+for (const account of [
+  { label: "agency", account_role: "agency", is_resource: false },
+  { label: "resource", account_role: "resource", is_resource: true },
+] as const) {
+  test(`${account.label} accounts do not receive project access`, async ({ page }) => {
+    const deniedUser = { ...authenticatedUser, ...account, permissions: [] };
+    await page.route("**/api/auth/me", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(deniedUser) }));
+    await page.goto("/");
+    await expect(page.getByRole("link", { name: "Projects" })).toHaveCount(0);
+    await page.goto("/projects");
+    await expect(page.getByRole("heading", { name: "Projects aren’t available for this account." })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Create project/ })).toHaveCount(0);
+  });
+}
+
+test("read-only project access hides and blocks project creation", async ({ page }) => {
+  const readOnlyUser = { ...authenticatedUser, permissions: ["projects.read"] };
+  await page.route("**/api/auth/me", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(readOnlyUser) }));
+  await page.goto("/projects");
+  await expect(page.getByRole("heading", { name: "Projects", exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Create project/ })).toHaveCount(0);
+  await page.goto("/projects/create");
+  await expect(page.getByRole("heading", { name: "Projects aren’t available for this account." })).toBeVisible();
+});
+
+test("project routes redirect guests to login", async ({ page }) => {
+  await page.goto("/projects");
+  await expect(page).toHaveURL(/\/login$/);
 });

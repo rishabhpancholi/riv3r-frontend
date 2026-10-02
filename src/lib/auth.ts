@@ -1,5 +1,6 @@
 import { api } from "./axios";
 import type { LoginFormValues } from "./schemas";
+import type { AccountRole, Permission } from "./access-control";
 
 export interface User {
   id: string;
@@ -13,6 +14,10 @@ export interface User {
   created_at: string;
   updated_at: string;
   deleted_at?: string | null;
+  /** Optional during the backend rollout; missing values fail closed. */
+  account_role?: AccountRole;
+  /** Server-computed capabilities. Unknown or missing values grant no access. */
+  permissions?: Permission[];
 }
 
 export async function login(credentials: LoginFormValues): Promise<User> {
