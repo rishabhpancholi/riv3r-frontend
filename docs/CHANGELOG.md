@@ -32,11 +32,10 @@ commit dates in repository history.
 
 ### Configuration
 
-- Added a local `.env` template containing the server-side backend origin and
-  browser-side same-origin API base URL used by the current application.
-- Updated the Next.js rewrite to derive its source API path from
-  `NEXT_PUBLIC_API_URL` and forward requests to the normalized combination of
-  `BACKEND_API_URL` and that path.
+- Added a local `.env` containing the single server-only `BACKEND_API_URL`.
+- Configured Axios to use the fixed same-origin `/api` path and Next.js to
+  forward it to the complete backend API URL without exposing an environment
+  variable to browser code.
 
 ### Documentation
 
