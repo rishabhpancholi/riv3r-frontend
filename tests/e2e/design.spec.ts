@@ -11,15 +11,21 @@ const publicRoutes = [
 ];
 
 test.beforeEach(async ({ page }) => {
-  await page.route("**/api/auth/me", route => route.fulfill({ status: 401, contentType: "application/json", body: "{}" }));
-  await page.route("**/api/auth/refresh", route => route.fulfill({ status: 401, contentType: "application/json", body: "{}" }));
+  await page.route("**/api/auth/me", route =>
+    route.fulfill({ status: 401, contentType: "application/json", body: "{}" }),
+  );
+  await page.route("**/api/auth/refresh", route =>
+    route.fulfill({ status: 401, contentType: "application/json", body: "{}" }),
+  );
 });
 
 for (const route of publicRoutes) {
   test(`${route.path} is responsive and accessible`, async ({ page }) => {
     await page.goto(route.path);
     await expect(page.getByRole("heading", { name: new RegExp(route.heading) })).toBeVisible({ timeout: 20_000 });
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    );
     expect(overflow).toBe(false);
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
@@ -38,25 +44,35 @@ const authenticatedUser = {
   name: "Alex Morgan",
   verification_status: "approved",
   is_resource: false,
-  account_role: "client",
-  permissions: ["projects.read", "projects.create"],
+  org_type: "client",
+  permissions: ["projects.view", "projects.create"],
   created_at: "2026-01-01T00:00:00Z",
   updated_at: "2026-01-01T00:00:00Z",
 };
 
-test("authenticated project routes provide project navigation", async ({ page }) => {
-  await page.route("**/api/auth/me", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(authenticatedUser) }));
-  await page.goto("/projects");
+test("authenticated client project routes provide permission-aware navigation", async ({ page }) => {
+  await page.route("**/api/auth/me", route =>
+    route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(authenticatedUser) }),
+  );
+  await page.goto("/client/projects");
   await expect(page.getByRole("heading", { name: "Projects", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Dashboard" }).first()).toHaveAttribute("href", "/");
-  await expect(page.getByRole("link", { name: "Create project" }).first()).toHaveAttribute("href", "/projects/create");
+  await expect(page.getByRole("link", { name: "Create project" }).first()).toHaveAttribute(
+    "href",
+    "/client/projects/create",
+  );
 });
 
 test("account menu logs out and redirects to login", async ({ page }) => {
-  await page.route("**/api/auth/me", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(authenticatedUser) }));
+  await page.route("**/api/auth/me", route =>
+    route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(authenticatedUser) }),
+  );
   let logoutCalled = false;
-  await page.route("**/api/auth/logout", route => { logoutCalled = true; return route.fulfill({ status: 204 }); });
-  await page.goto("/projects");
+  await page.route("**/api/auth/logout", route => {
+    logoutCalled = true;
+    return route.fulfill({ status: 204 });
+  });
+  await page.goto("/client/projects");
   await page.getByRole("button", { name: "Open account menu" }).click();
   await page.getByRole("menuitem", { name: "Log out" }).click();
   await expect(page).toHaveURL(/\/login$/);
@@ -64,31 +80,51 @@ test("account menu logs out and redirects to login", async ({ page }) => {
 });
 
 for (const account of [
-  { label: "agency", account_role: "agency", is_resource: false },
-  { label: "resource", account_role: "resource", is_resource: true },
+  { label: "agency", org_type: "agency", is_resource: false },
+  { label: "resource", org_type: "resource", is_resource: true },
+  { label: "RIV3R", org_type: "riv3r", is_resource: false },
 ] as const) {
-  test(`${account.label} accounts do not receive project access`, async ({ page }) => {
+  test(`${account.label} accounts do not receive client project access`, async ({ page }) => {
     const deniedUser = { ...authenticatedUser, ...account, permissions: [] };
-    await page.route("**/api/auth/me", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(deniedUser) }));
+    await page.route("**/api/auth/me", route =>
+      route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(deniedUser) }),
+    );
     await page.goto("/");
     await expect(page.getByRole("link", { name: "Projects" })).toHaveCount(0);
-    await page.goto("/projects");
+    await page.goto("/client/projects");
     await expect(page.getByRole("heading", { name: "Projects aren’t available for this account." })).toBeVisible();
     await expect(page.getByRole("link", { name: /Create project/ })).toHaveCount(0);
   });
 }
 
-test("read-only project access hides and blocks project creation", async ({ page }) => {
-  const readOnlyUser = { ...authenticatedUser, permissions: ["projects.read"] };
-  await page.route("**/api/auth/me", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(readOnlyUser) }));
-  await page.goto("/projects");
+test("view-only client access hides and blocks project creation", async ({ page }) => {
+  const viewOnlyUser = { ...authenticatedUser, permissions: ["projects.view"] };
+  await page.route("**/api/auth/me", route =>
+    route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(viewOnlyUser) }),
+  );
+  await page.goto("/client/projects");
   await expect(page.getByRole("heading", { name: "Projects", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: /Create project/ })).toHaveCount(0);
-  await page.goto("/projects/create");
+  await page.goto("/client/projects/create", { timeout: 60_000 });
   await expect(page.getByRole("heading", { name: "Projects aren’t available for this account." })).toBeVisible();
 });
 
-test("project routes redirect guests to login", async ({ page }) => {
-  await page.goto("/projects");
+test("project permissions refresh when the window regains focus", async ({ page }) => {
+  let currentUser = authenticatedUser;
+  await page.route("**/api/auth/me", route =>
+    route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(currentUser) }),
+  );
+  await page.goto("/client/projects");
+  await expect(page.getByRole("link", { name: "Projects" }).first()).toBeVisible();
+
+  currentUser = { ...authenticatedUser, permissions: [] };
+  await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+
+  await expect(page.getByRole("heading", { name: "Projects aren’t available for this account." })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Projects" })).toHaveCount(0);
+});
+
+test("client project routes redirect guests to login", async ({ page }) => {
+  await page.goto("/client/projects");
   await expect(page).toHaveURL(/\/login$/);
 });

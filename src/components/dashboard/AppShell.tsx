@@ -15,16 +15,21 @@ import { cn } from "@/lib/cn";
 import { useSession } from "@/components/auth/SessionProvider";
 import { visibleNavigation } from "@/lib/access-control";
 
-const NAV_ICONS = { "/": LayoutDashboard, "/projects": FolderKanban } as const;
-const ROLE_LABELS = { client: "Client account", agency: "Agency account", resource: "Professional account" } as const;
+const NAV_ICONS = { "/": LayoutDashboard, "/client/projects": FolderKanban } as const;
+const ROLE_LABELS = {
+  client: "Client account",
+  agency: "Agency account",
+  resource: "Professional account",
+  riv3r: "RIV3R account",
+} as const;
 
-export default function AppShell({ user, activePath, children }: { user: User; activePath: "/" | "/projects"; children: ReactNode }) {
+export default function AppShell({ user, activePath, children }: { user: User; activePath: "/" | "/client/projects"; children: ReactNode }) {
   const router = useRouter();
   const { setUser } = useSession();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const initials = user.name.split(" ").map(part => part[0]).join("").slice(0, 2).toUpperCase();
   const links = visibleNavigation(user);
-  const roleLabel = user.account_role && user.account_role in ROLE_LABELS ? ROLE_LABELS[user.account_role as keyof typeof ROLE_LABELS] : "RIV3R account";
+  const roleLabel = user.org_type && user.org_type in ROLE_LABELS ? ROLE_LABELS[user.org_type as keyof typeof ROLE_LABELS] : "RIV3R account";
 
   async function handleLogout() {
     if (isLoggingOut) return;

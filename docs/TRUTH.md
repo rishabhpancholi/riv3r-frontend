@@ -29,8 +29,8 @@ shell in this repository yet.
 | `/onboarding` | Lets the visitor choose organization or resource onboarding. |
 | `/onboarding/organization` | Creates an organization and its owner. |
 | `/onboarding/resource` | Creates an individual resource profile. |
-| `/projects` | Requires `projects.read`; otherwise shows 403 to authenticated users. |
-| `/projects/create` | Requires `projects.create`; otherwise shows 403 to authenticated users. |
+| `/client/projects` | Requires client `org_type` and `projects.view`; otherwise shows 403 to authenticated users. |
+| `/client/projects/create` | Requires client `org_type` and `projects.create`; otherwise shows 403 to authenticated users. |
 | Any unknown route | Uses the custom App Router 404 page. |
 
 The old `/dashboard/[user_id]` route was removed. The dashboard is rendered on
@@ -67,14 +67,18 @@ Implemented endpoints:
 Optional form strings are normalized to `null` before onboarding requests.
 Phone numbers are sent as country code plus the 10-digit national number.
 
-`/auth/login` and `/auth/me` supply the server-authoritative `account_role` and
+`/auth/login` and `/auth/me` supply the server-authoritative `org_type` and
 `permissions`. These fields are optional during backend rollout and missing or
 unknown values grant no protected access. Current permissions are
-`projects.read` and `projects.create`.
+`projects.view` and `projects.create`.
 
 ## Authentication behavior
 
-- On `/`, `SessionCheck` calls `/auth/me`.
+- On `/`, `SessionCheck` calls `/auth/me` for initial session restoration.
+- Once authenticated, the root `SessionProvider` rechecks `/auth/me` every 30
+  minutes and whenever the window regains focus or becomes visible. Updated
+  organization type, permissions, and verification status are applied to the
+  current screen and navigation without a reload.
 - A 401 triggers one `/auth/refresh` attempt followed by another `/auth/me`.
 - A guest remains on the landing page if refresh fails.
 - An authenticated user is rechecked every 30 minutes, on window focus, and
@@ -85,10 +89,11 @@ unknown values grant no protected access. Current permissions are
   or the approved welcome view.
 - The authenticated account menu logs out through `/auth/logout` and redirects
   to `/login`; tokens remain in credentialed browser cookies.
-- Dashboard is universal. Projects navigation requires `projects.read`; project
-  creation requires `projects.create`. Agencies, resources, unverified clients,
-  and accounts without permissions do not see Projects and receive a dedicated
-  403 response state on direct route access.
+- Dashboard is universal. Client Projects navigation requires both
+  `org_type: "client"` and `projects.view`; project creation requires the client
+  organization type and `projects.create`. Agency, resource, RIV3R, and
+  permission-less accounts do not see Projects and receive a dedicated 403
+  response state on direct route access.
 - Frontend permission checks are UX boundaries only. Backend project endpoints
   remain responsible for enforcing authorization.
 - The root in-memory session provider preserves the verified user across

@@ -1,6 +1,6 @@
 import { api } from "./axios";
 import type { LoginFormValues } from "./schemas";
-import type { AccountRole, Permission } from "./access-control";
+import type { OrgType, Permission } from "./access-control";
 
 export interface User {
   id: string;
@@ -15,7 +15,7 @@ export interface User {
   updated_at: string;
   deleted_at?: string | null;
   /** Optional during the backend rollout; missing values fail closed. */
-  account_role?: AccountRole;
+  org_type?: OrgType | null;
   /** Server-computed capabilities. Unknown or missing values grant no access. */
   permissions?: Permission[];
 }

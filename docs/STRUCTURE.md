@@ -33,8 +33,8 @@ src/app/
 |-- onboarding/page.tsx                # Role selection
 |-- onboarding/organization/page.tsx   # Organization form route
 |-- onboarding/resource/page.tsx       # Resource form route
-|-- projects/page.tsx                  # Authenticated project empty state
-|-- projects/create/page.tsx           # Project creation placeholder
+|-- client/projects/page.tsx           # Client project empty state
+|-- client/projects/create/page.tsx    # Client project creation placeholder
 |-- not-found.tsx                      # App Router 404 entry
 |-- errors/NotFound.tsx                # 404 presentation
 `-- globals.css                        # Tailwind import, loader/editor CSS
@@ -46,10 +46,9 @@ Route files stay thin. Interactive behavior belongs in client components under
 ## Components by domain
 
 - `auth/`
-  - `SessionProvider.tsx` keeps the verified user in memory across client-side
-    authenticated navigation.
-  - `SessionCheck.tsx` owns initial session restoration and ongoing session
-    checks.
+  - `SessionProvider.tsx` keeps the verified user in memory and refreshes the
+    server session periodically and on focus/visibility changes.
+  - `SessionCheck.tsx` owns initial session restoration on `/`.
   - `Riv3rLoader.tsx` is used for initial/direct session restoration, not normal
     route transitions.
   - `RouteTransitionLoader.tsx` provides a timed route overlay but is currently
@@ -57,7 +56,8 @@ Route files stay thin. Interactive behavior belongs in client components under
 - `dashboard/DashboardView.tsx` renders approved, pending, and rejected user
   states. `dashboard/AppShell.tsx` owns Dashboard/Projects navigation and the
   logout account menu.
-- `projects/` supplies the protected project list and create-placeholder views.
+- `client/projects/` supplies the client-scoped, permission-protected project
+  list and create-placeholder views.
 - `login/`
   - `LoginScreen.tsx` supplies the page shell.
   - `LoginForm.tsx` owns validation, login, local lockout, toast, and redirect.

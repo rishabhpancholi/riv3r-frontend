@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import { useRouter } from "next/navigation";
 
 import { getMe, refreshSession } from "@/lib/auth";
 import { isUnauthorizedError } from "@/lib/axios";
@@ -10,13 +9,9 @@ import Riv3rLoader from "@/components/auth/Riv3rLoader";
 import DashboardView from "@/components/dashboard/DashboardView";
 import { useSession } from "@/components/auth/SessionProvider";
 
-const HEARTBEAT_INTERVAL_MS = 30 * 60 * 1000;
-
 export default function SessionCheck({ children }: { children: ReactNode }) {
-  const router = useRouter();
   const { user, setUser } = useSession();
   const [checking, setChecking] = useState(user === null);
-  const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
     if (user) return;
@@ -47,51 +42,6 @@ export default function SessionCheck({ children }: { children: ReactNode }) {
       isActive = false;
     };
   }, [setUser, user]);
-
-  useEffect(() => {
-    if (!user) return;
-
-    let isActive = true;
-
-    async function refreshUser() {
-      try {
-        const freshUser = await getMe();
-        if (isActive) setUser(freshUser);
-      } catch (error) {
-        if (!isUnauthorizedError(error)) return;
-
-        try {
-          await refreshSession();
-          const freshUser = await getMe();
-          if (isActive) setUser(freshUser);
-        } catch {
-          if (isActive) {
-            setIsExpired(true);
-            router.push("/login");
-          }
-        }
-      }
-    }
-
-    function handleVisibilityChange() {
-      if (document.visibilityState === "visible") refreshUser();
-    }
-
-    const intervalId = setInterval(refreshUser, HEARTBEAT_INTERVAL_MS);
-    window.addEventListener("focus", refreshUser);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      isActive = false;
-      clearInterval(intervalId);
-      window.removeEventListener("focus", refreshUser);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [user, router, setUser]);
-
-  if (isExpired) {
-    return <Riv3rLoader />;
-  }
 
   if (checking) {
     return <Riv3rLoader />;

@@ -26,7 +26,13 @@ commit dates in repository history.
   endpoint and redirects successful logouts to `/login`.
 - Added server-authoritative account roles and permissions, centralized access
   policies, permission-filtered navigation, fail-closed project guards, and a
-  dedicated 403 state. Projects are initially limited to approved clients.
+  dedicated 403 state.
+- Switched the identity contract to backend-provided `org_type` and
+  `permissions`, moved project routes to `/client/projects`, and limited project
+  visibility and creation to clients with `projects.view` and
+  `projects.create` respectively.
+- Moved periodic, focus, and visibility session refresh into the root provider
+  so permission changes update navigation and protected screens without reloads.
 
 ### Testing
 
