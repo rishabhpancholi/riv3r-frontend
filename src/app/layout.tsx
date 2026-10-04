@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import localFont from "next/font/local";
+import "@mantine/core/styles.css";
 import "./globals.css";
+import { MantineProvider } from "@mantine/core";
 
 import { ToastProvider } from "@/components/toast/ToastProvider";
 import { SessionProvider } from "@/components/auth/SessionProvider";
@@ -14,7 +16,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${geist.variable} ${instrumentSerif.variable}`}>
       <body className="antialiased">
-        <SessionProvider><ToastProvider>{children}</ToastProvider></SessionProvider>
+        <MantineProvider><SessionProvider><ToastProvider>{children}</ToastProvider></SessionProvider></MantineProvider>
       </body>
     </html>
   );

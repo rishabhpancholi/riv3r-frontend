@@ -1,7 +1,7 @@
 import type { User } from "@/lib/auth";
 
 export type OrgType = "client" | "agency" | "riv3r" | "resource";
-export type Permission = "projects.view" | "projects.create";
+export type Permission = "projects.view" | "projects.create" | "projects.publish" | "users.view";
 
 export interface RoutePolicy {
   orgTypes?: readonly OrgType[];

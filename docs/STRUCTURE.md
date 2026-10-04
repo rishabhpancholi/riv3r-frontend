@@ -33,8 +33,9 @@ src/app/
 |-- onboarding/page.tsx                # Role selection
 |-- onboarding/organization/page.tsx   # Organization form route
 |-- onboarding/resource/page.tsx       # Resource form route
-|-- client/projects/page.tsx           # Client project empty state
-|-- client/projects/create/page.tsx    # Client project creation placeholder
+|-- client/projects/page.tsx           # Client project list/table route
+|-- client/projects/create/page.tsx    # Client project creation route
+|-- projects/page.tsx                  # Legacy redirect to the client route
 |-- not-found.tsx                      # App Router 404 entry
 |-- errors/NotFound.tsx                # 404 presentation
 `-- globals.css                        # Tailwind import, loader/editor CSS
@@ -57,7 +58,8 @@ Route files stay thin. Interactive behavior belongs in client components under
   states. `dashboard/AppShell.tsx` owns Dashboard/Projects navigation and the
   logout account menu.
 - `client/projects/` supplies the client-scoped, permission-protected project
-  list and create-placeholder views.
+  list/table, Radix filters, Mantine detail drawer, publishing, and creation
+  form views.
 - `login/`
   - `LoginScreen.tsx` supplies the page shell.
   - `LoginForm.tsx` owns validation, login, local lockout, toast, and redirect.
@@ -65,7 +67,8 @@ Route files stay thin. Interactive behavior belongs in client components under
   - The organization and resource form components own field-to-payload mapping.
   - `FormControls.tsx`, `PasswordField.tsx`, and `SkillsInput.tsx` are shared
     onboarding controls.
-- `tiptap/RichTextEditor.tsx` is the controlled rich-text bio editor.
+- `tiptap/RichTextEditor.tsx` is the shared controlled rich-text editor for
+  resource bios and project descriptions.
 - `toast/` mounts `react-hot-toast` and supplies branded success/error content.
 - `ui/` contains the shared logo, header, button, card, and badge primitives.
 - `onboarding/OnboardingShell.tsx` provides the shared branded two-step form
@@ -80,6 +83,9 @@ Route files stay thin. Interactive behavior belongs in client components under
   permission helpers, and the declarative workspace navigation registry.
 - `src/lib/onboarding.ts`: organization/resource payload contracts and POST
   wrappers.
+- `src/lib/projects.ts`: project contracts plus list, detail, create, and
+  publish requests.
+- `src/lib/users.ts`: organization-user contract and directory request.
 - `src/lib/schemas.ts`: Zod schemas, inferred form types, and shared password
   rules.
 
@@ -132,7 +138,7 @@ user input
 
 ## Tests
 
-`tests/auth.test.ts`, `tests/onboarding.test.ts`, and
+`tests/auth.test.ts`, `tests/onboarding.test.ts`, `tests/projects.test.ts`, and
 `tests/access-control.test.ts` cover request contracts, payload mapping, and the
 role/permission matrix. The API tests cover request paths, payload
 forwarding, successful return values, and propagated failures. Add focused tests

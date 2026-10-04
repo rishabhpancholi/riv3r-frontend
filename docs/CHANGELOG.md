@@ -6,6 +6,23 @@ commit dates in repository history.
 
 ## Unreleased
 
+### Projects
+
+- Added server-backed project card and table views with search, status/contact/
+  domain filters, sorting, pagination, responsive empty/error/loading states,
+  and 15-second plus focus/visibility refreshes.
+- Added a Mantine project details drawer with lifecycle-specific status badges
+  and permission-aware draft publishing.
+- Added the complete project creation form, Radix UI dropdowns, organization
+  contact selection, save-draft/direct-publish actions, toast feedback, and
+  post-creation redirect.
+- Reused the TipTap rich-text editor for project descriptions and corrected
+  horizontal padding across project creation inputs and placeholders.
+- Added email addresses to the project-list contact filter dropdown entries
+  while keeping only the contact name on the closed select trigger.
+- Added project and organization-user API contracts and tests, plus a legacy
+  `/projects` redirect to prevent stale links from reaching the custom 404.
+
 ### Design
 
 - Rebuilt the landing, authentication, onboarding, dashboard, loading, toast,

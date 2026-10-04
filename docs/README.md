@@ -1,7 +1,8 @@
 # RIV3R Frontend
 
 RIV3R is a Next.js frontend for onboarding organizations and resources,
-cookie-based authentication, and verification-aware account entry.
+cookie-based authentication, verification-aware account entry, and client
+project management.
 
 For implementation facts read `TRUTH.md`; for the code map read
 `STRUCTURE.md`; for repository history read `CHANGELOG.md`.
@@ -61,6 +62,10 @@ server-only and the browser does not need the backend origin.
 
 Install the Playwright Chromium browser once with `npx playwright install chromium`.
 There is currently no lint command or watch-mode test command.
+
+Project UI uses Radix Select for dropdowns and Mantine for the responsive
+details drawer and pagination. PostCSS is configured with the Mantine preset
+alongside Tailwind CSS v4.
 
 ## Development checklist
 

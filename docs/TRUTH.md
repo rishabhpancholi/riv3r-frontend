@@ -13,8 +13,7 @@ RIV3R currently provides:
 - organization onboarding and individual resource onboarding;
 - cookie-based login and session restoration;
 - a minimal authenticated dashboard with verification-status states; and
-- permission-protected project list and create-placeholder routes for approved
-  client accounts;
+- permission-protected project management for approved client accounts;
 - a branded 404 experience.
 
 There is no full project/resource marketplace or authenticated application
@@ -29,8 +28,9 @@ shell in this repository yet.
 | `/onboarding` | Lets the visitor choose organization or resource onboarding. |
 | `/onboarding/organization` | Creates an organization and its owner. |
 | `/onboarding/resource` | Creates an individual resource profile. |
-| `/client/projects` | Requires client `org_type` and `projects.view`; otherwise shows 403 to authenticated users. |
-| `/client/projects/create` | Requires client `org_type` and `projects.create`; otherwise shows 403 to authenticated users. |
+| `/client/projects` | Requires client `org_type` and `projects.view`; provides server-filtered card/table views, pagination, a project-detail drawer, and permission-aware draft publishing. |
+| `/client/projects/create` | Requires client `org_type` and `projects.create`; creates a draft or immediately publishes a project from the backend-defined project fields. |
+| `/projects` | Redirects legacy project links and bookmarks to `/client/projects`. |
 | Any unknown route | Uses the custom App Router 404 page. |
 
 The old `/dashboard/[user_id]` route was removed. The dashboard is rendered on
@@ -63,6 +63,11 @@ Implemented endpoints:
 | `POST` | `/auth/logout` | Clear the access and refresh cookie session. |
 | `POST` | `/onboarding/organization` | Create an organization and owner. |
 | `POST` | `/onboarding/resource` | Create a resource profile. |
+| `GET` | `/projects` | List projects with pagination, text/status/SPOC/domain filters, and sorting. |
+| `GET` | `/projects/{project_id}` | Read current project details. |
+| `POST` | `/projects` | Create a draft or create-and-publish a project. |
+| `POST` | `/projects/{project_id}/publish` | Publish an existing draft. |
+| `GET` | `/users` | List organization users for project contact selection. |
 
 Optional form strings are normalized to `null` before onboarding requests.
 Phone numbers are sent as country code plus the 10-digit national number.
@@ -70,7 +75,7 @@ Phone numbers are sent as country code plus the 10-digit national number.
 `/auth/login` and `/auth/me` supply the server-authoritative `org_type` and
 `permissions`. These fields are optional during backend rollout and missing or
 unknown values grant no protected access. Current permissions are
-`projects.view` and `projects.create`.
+`projects.view`, `projects.create`, `projects.publish`, and `users.view`.
 
 ## Authentication behavior
 
@@ -118,6 +123,8 @@ unknown values grant no protected access. Current permissions are
   when both are supplied.
 - Resource bio is authored as TipTap HTML. The UI enforces a 500-character
   plain-text limit while preserving rich-text markup in the payload.
+- Project descriptions are authored with the shared TipTap editor and sent as
+  HTML; validation requires non-empty plain-text content.
 
 ## UI and responsive constraints
 
@@ -135,12 +142,20 @@ unknown values grant no protected access. Current permissions are
   states; it does not present unsupported marketplace data.
 - All new work must remain usable on narrow screens, with no horizontal
   clipping, unreachable controls, or hover-only behavior.
+- Project dropdowns use Radix Select. The project detail drawer and pagination
+  use Mantine, mounted through the root `MantineProvider`.
+- Project lists refresh immediately after frontend create/publish mutations,
+  on window focus and visibility restoration, manually, and every 15 seconds.
+  The backend exposes no realtime subscription contract, so mutations made by
+  unrelated database writers can take up to the polling interval (or backend
+  cache TTL if cache invalidation did not run) to appear.
 
 ## Quality and operational truth
 
 - TypeScript runs in strict, no-emit mode and maps `@/*` to `src/*`.
 - Tests use Vitest in a Node environment. Current tests mock Axios and cover the
-  auth and onboarding API wrapper contracts and error propagation.
+  auth, onboarding, project, and organization-user API wrapper contracts and
+  error propagation.
 - GitHub Actions uses Node 22, `npm ci`, and `npm test` for pushes to `main` and
   pull requests.
 - CI does not currently run `npm run build`.

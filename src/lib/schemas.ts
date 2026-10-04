@@ -157,3 +157,23 @@ export const resourceOnboardingSchema = z
 export type ResourceOnboardingFormValues = z.infer<
   typeof resourceOnboardingSchema
 >;
+
+export const createProjectSchema = z.object({
+  spoc_user_id: z.string().min(1, "Choose a person of contact"),
+  title: z.string().trim().min(1, "Project title is required"),
+  description: z.string().refine(value => value.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim().length > 0, "Project description is required"),
+  deadline_date: z.string().min(1, "Deadline is required").refine(value => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return new Date(`${value}T00:00:00`) > today;
+  }, "Deadline must be later than today"),
+  budget: z.string().trim().min(1, "Budget is required").refine(value => {
+    const amount = Number(value);
+    return Number.isFinite(amount) && amount >= 0 && /^\d+(\.\d{1,2})?$/.test(value);
+  }, "Enter a non-negative amount with up to 2 decimals"),
+  currency: z.string().trim().regex(/^[A-Z]{3}$/, "Use a 3-letter currency code"),
+  domain: z.string().trim().min(1, "Domain is required"),
+  skill_tags: z.array(z.string().min(1)),
+});
+
+export type CreateProjectFormValues = z.infer<typeof createProjectSchema>;
